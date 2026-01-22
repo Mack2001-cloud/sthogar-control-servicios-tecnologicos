@@ -17,7 +17,8 @@ require __DIR__ . '/../app/helpers/csrf.php';
 require __DIR__ . '/../app/helpers/session.php';
 require __DIR__ . '/../app/helpers/validators.php';
 require __DIR__ . '/../app/helpers/auth.php';
-require __DIR__ . '/../app/middlewares/auth.php';
+require __DIR__ . '/../app/middlewares/AuthMiddleware.php';
+require __DIR__ . '/../app/middlewares/RoleMiddleware.php';
 
 spl_autoload_register(function (string $class): void {
     $prefix = 'App\\';
@@ -49,6 +50,9 @@ $pagosController = new PagosController();
 $adjuntosController = new AdjuntosController();
 $exportController = new ExportController();
 
+$adminMiddleware = ['auth_middleware', role_required('admin')];
+$generalMiddleware = ['auth_middleware', role_required_any(['admin', 'tecnico'])];
+
 $router->add('GET', '/', function (): void {
     if (isset($_SESSION['user_id'])) {
         header('Location: ' . AUTH_POST_LOGIN_ROUTE);
@@ -62,35 +66,35 @@ $router->add('GET', AUTH_LOGIN_ROUTE, [$authController, 'loginForm']);
 $router->add('POST', AUTH_LOGIN_POST_ROUTE, [$authController, 'loginPost']);
 $router->add('GET', AUTH_LOGOUT_ROUTE, [$authController, 'logout']);
 
-$router->add('GET', '/dashboard', [$dashboardController, 'index'], ['auth_middleware']);
+$router->add('GET', '/dashboard', [$dashboardController, 'index'], $generalMiddleware);
 
-$router->add('GET', '/clientes', [$clientesController, 'index'], ['auth_middleware']);
-$router->add('GET', '/clientes/create', [$clientesController, 'createForm'], ['auth_middleware']);
-$router->add('POST', '/clientes/create', [$clientesController, 'create'], ['auth_middleware']);
-$router->add('GET', '/clientes/edit', [$clientesController, 'editForm'], ['auth_middleware']);
-$router->add('POST', '/clientes/edit', [$clientesController, 'update'], ['auth_middleware']);
-$router->add('POST', '/clientes/delete', [$clientesController, 'delete'], ['auth_middleware']);
+$router->add('GET', '/clientes', [$clientesController, 'index'], $generalMiddleware);
+$router->add('GET', '/clientes/create', [$clientesController, 'createForm'], $adminMiddleware);
+$router->add('POST', '/clientes/create', [$clientesController, 'create'], $adminMiddleware);
+$router->add('GET', '/clientes/edit', [$clientesController, 'editForm'], $adminMiddleware);
+$router->add('POST', '/clientes/edit', [$clientesController, 'update'], $adminMiddleware);
+$router->add('POST', '/clientes/delete', [$clientesController, 'delete'], $adminMiddleware);
 
-$router->add('GET', '/servicios', [$serviciosController, 'index'], ['auth_middleware']);
-$router->add('GET', '/servicios/create', [$serviciosController, 'createForm'], ['auth_middleware']);
-$router->add('POST', '/servicios/create', [$serviciosController, 'create'], ['auth_middleware']);
-$router->add('GET', '/servicios/view', [$serviciosController, 'view'], ['auth_middleware']);
-$router->add('GET', '/servicios/edit', [$serviciosController, 'editForm'], ['auth_middleware']);
-$router->add('POST', '/servicios/edit', [$serviciosController, 'update'], ['auth_middleware']);
-$router->add('POST', '/servicios/status', [$serviciosController, 'updateStatus'], ['auth_middleware']);
-$router->add('POST', '/servicios/delete', [$serviciosController, 'delete'], ['auth_middleware']);
+$router->add('GET', '/servicios', [$serviciosController, 'index'], $generalMiddleware);
+$router->add('GET', '/servicios/create', [$serviciosController, 'createForm'], $generalMiddleware);
+$router->add('POST', '/servicios/create', [$serviciosController, 'create'], $generalMiddleware);
+$router->add('GET', '/servicios/view', [$serviciosController, 'view'], $generalMiddleware);
+$router->add('GET', '/servicios/edit', [$serviciosController, 'editForm'], $adminMiddleware);
+$router->add('POST', '/servicios/edit', [$serviciosController, 'update'], $adminMiddleware);
+$router->add('POST', '/servicios/status', [$serviciosController, 'updateStatus'], $generalMiddleware);
+$router->add('POST', '/servicios/delete', [$serviciosController, 'delete'], $adminMiddleware);
 
-$router->add('GET', '/equipos', [$equiposController, 'index'], ['auth_middleware']);
-$router->add('GET', '/equipos/create', [$equiposController, 'createForm'], ['auth_middleware']);
-$router->add('POST', '/equipos/create', [$equiposController, 'create'], ['auth_middleware']);
-$router->add('GET', '/equipos/edit', [$equiposController, 'editForm'], ['auth_middleware']);
-$router->add('POST', '/equipos/edit', [$equiposController, 'update'], ['auth_middleware']);
-$router->add('POST', '/equipos/delete', [$equiposController, 'delete'], ['auth_middleware']);
+$router->add('GET', '/equipos', [$equiposController, 'index'], $generalMiddleware);
+$router->add('GET', '/equipos/create', [$equiposController, 'createForm'], $adminMiddleware);
+$router->add('POST', '/equipos/create', [$equiposController, 'create'], $adminMiddleware);
+$router->add('GET', '/equipos/edit', [$equiposController, 'editForm'], $adminMiddleware);
+$router->add('POST', '/equipos/edit', [$equiposController, 'update'], $adminMiddleware);
+$router->add('POST', '/equipos/delete', [$equiposController, 'delete'], $adminMiddleware);
 
-$router->add('POST', '/pagos/create', [$pagosController, 'create'], ['auth_middleware']);
-$router->add('POST', '/adjuntos/upload', [$adjuntosController, 'upload'], ['auth_middleware']);
+$router->add('POST', '/pagos/create', [$pagosController, 'create'], $generalMiddleware);
+$router->add('POST', '/adjuntos/upload', [$adjuntosController, 'upload'], $generalMiddleware);
 
-$router->add('GET', '/export/clientes.csv', [$exportController, 'clientes'], ['auth_middleware']);
-$router->add('GET', '/export/servicios.csv', [$exportController, 'servicios'], ['auth_middleware']);
+$router->add('GET', '/export/clientes.csv', [$exportController, 'clientes'], $adminMiddleware);
+$router->add('GET', '/export/servicios.csv', [$exportController, 'servicios'], $adminMiddleware);
 
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
