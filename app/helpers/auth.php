@@ -23,14 +23,32 @@ function logout_user(): void
     unset($_SESSION['user_id'], $_SESSION['user_name'], $_SESSION['user_role']);
 }
 
+function is_logged_in(): bool
+{
+    return isset($_SESSION['user_id']);
+}
+
+function current_user_role(): string
+{
+    return $_SESSION['user_role'] ?? '';
+}
+
 function is_admin(): bool
 {
-    return ($_SESSION['user_role'] ?? '') === 'admin';
+    return current_user_role() === 'admin';
+}
+
+function require_login(): void
+{
+    if (!is_logged_in()) {
+        header('Location: /auth/login');
+        exit;
+    }
 }
 
 function require_role(string $role): void
 {
-    if (($_SESSION['user_role'] ?? '') !== $role) {
+    if (current_user_role() !== $role) {
         http_response_code(403);
         echo view('partials/403');
         exit;
