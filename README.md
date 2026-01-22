@@ -1,16 +1,36 @@
-# sthogar-control-servicios-tecnologicos
+# Sistema de Gestión y Control de Servicios Tecnológicos – ST-Hogar
 
-Sistema de Gestión y Control de Servicios Tecnológicos – ST-Hogar
-
-## Descripción
-Este repositorio inicia la base del sistema "ST-Hogar | Control de Servicios" usando PHP 8, MariaDB y Bootstrap 5.
-Incluye una pantalla de bienvenida con los módulos principales y el stack previsto para el proyecto.
+Aplicación interna en PHP 8 + MariaDB para controlar clientes, servicios tecnológicos, equipos instalados, bitácoras, pagos y evidencias.
 
 ## Estructura
-- `index.php`: página principal del sistema.
-- `assets/css/styles.css`: estilos personalizados.
+```
+/public
+  index.php
+  .htaccess
+  /assets
+/app
+  /config
+  /controllers
+  /models
+  /views
+  /helpers
+  /middlewares
+  /core
+/storage/uploads
+/database
+/docs
+```
 
 ## Requisitos
 - PHP 8
-- MariaDB (administrada con phpMyAdmin)
+- MariaDB (phpMyAdmin)
 - Servidor web (Apache/Nginx)
+
+## Configuración rápida
+1. Importa el script SQL: `database/sthogar.sql`.
+2. Ajusta credenciales en `app/config/database.php`.
+3. Configura el DocumentRoot apuntando a `/public`.
+
+## Usuarios de prueba
+- Admin: `admin@sthogar.test` / `Admin123*`
+- Técnico: `tecnico@sthogar.test` / `Tecnico123*`

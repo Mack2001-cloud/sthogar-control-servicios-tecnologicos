@@ -1,0 +1,104 @@
+:root {
+  color-scheme: dark;
+}
+
+body {
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+.app-body {
+  background: #0f1116;
+  color: #e8ecf1;
+}
+
+.auth-body {
+  background: linear-gradient(135deg, #10131a, #1b2330);
+  color: #e8ecf1;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 240px;
+  min-height: 100vh;
+  background: #151a23;
+  padding: 24px 20px;
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sidebar-brand {
+  margin-bottom: 32px;
+}
+
+.sidebar .nav-link {
+  color: #c8d2df;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.sidebar .nav-link:hover {
+  background: rgba(13, 110, 253, 0.15);
+  color: #ffffff;
+}
+
+.content {
+  padding: 24px 32px 40px;
+}
+
+.topbar {
+  background: #1a202c;
+  padding: 16px 20px;
+  border-radius: 12px;
+}
+
+.card {
+  background: #171c26;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  color: #e8ecf1;
+}
+
+.card.stat-card {
+  border-left: 4px solid #3a86ff;
+}
+
+.table {
+  margin-bottom: 0;
+}
+
+.table-dark {
+  --bs-table-bg: #171c26;
+  --bs-table-striped-bg: #1f2633;
+  --bs-table-hover-bg: #222a38;
+  --bs-table-color: #e8ecf1;
+}
+
+.form-control,
+.form-select {
+  background-color: #121721;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #e8ecf1;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #3a86ff;
+  box-shadow: 0 0 0 0.2rem rgba(58, 134, 255, 0.2);
+}
+
+.btn-primary {
+  background-color: #3a86ff;
+  border-color: #3a86ff;
+}
+
+.btn-success {
+  background-color: #1bbf83;
+  border-color: #1bbf83;
+}
+
+.alert {
+  border-radius: 12px;
+}
+
+.list-group-item {
+  border-color: rgba(255, 255, 255, 0.05);
+}
