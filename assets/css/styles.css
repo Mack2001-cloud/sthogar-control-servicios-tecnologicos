@@ -1,0 +1,23 @@
+:root {
+  color-scheme: light;
+}
+
+body {
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+header .badge {
+  letter-spacing: 0.02em;
+}
+
+.module-card {
+  background: #f8f9fb;
+}
+
+.module-card h4 {
+  color: #0d6efd;
+}
+
+.btn[disabled] {
+  cursor: not-allowed;
+}
