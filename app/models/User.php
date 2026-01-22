@@ -6,10 +6,10 @@ use App\Core\Database;
 
 class User
 {
-    public static function find(int $id): ?array
+    public static function findById(int $id): ?array
     {
         $pdo = Database::connection();
-        $stmt = $pdo->prepare('SELECT id, name, email, role FROM users WHERE id = :id');
+        $stmt = $pdo->prepare('SELECT id, nombre AS name, email, rol AS role, activo FROM usuarios WHERE id = :id');
         $stmt->execute(['id' => $id]);
         $user = $stmt->fetch();
 
@@ -19,7 +19,7 @@ class User
     public static function findByEmail(string $email): ?array
     {
         $pdo = Database::connection();
-        $stmt = $pdo->prepare('SELECT * FROM users WHERE email = :email LIMIT 1');
+        $stmt = $pdo->prepare('SELECT id, nombre AS name, email, rol AS role, pass_hash, activo FROM usuarios WHERE email = :email LIMIT 1');
         $stmt->execute(['email' => $email]);
         $user = $stmt->fetch();
 
@@ -29,6 +29,6 @@ class User
     public static function countAll(): int
     {
         $pdo = Database::connection();
-        return (int) $pdo->query('SELECT COUNT(*) FROM users')->fetchColumn();
+        return (int) $pdo->query('SELECT COUNT(*) FROM usuarios')->fetchColumn();
     }
 }

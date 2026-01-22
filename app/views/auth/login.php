@@ -27,7 +27,7 @@ $flash = get_flash();
                         </div>
                     <?php endif; ?>
 
-                    <form method="POST" action="/auth/login">
+                    <form method="POST" action="<?= e(AUTH_LOGIN_POST_ROUTE) ?>">
                         <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
                         <div class="mb-3">
                             <label class="form-label">Correo</label>
