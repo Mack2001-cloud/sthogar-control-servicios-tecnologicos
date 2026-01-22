@@ -10,9 +10,11 @@ use App\Controllers\PagosController;
 use App\Controllers\AdjuntosController;
 use App\Controllers\ExportController;
 
+require __DIR__ . '/../app/config/auth.php';
 require __DIR__ . '/../app/helpers/view.php';
 require __DIR__ . '/../app/helpers/flash.php';
 require __DIR__ . '/../app/helpers/csrf.php';
+require __DIR__ . '/../app/helpers/session.php';
 require __DIR__ . '/../app/helpers/validators.php';
 require __DIR__ . '/../app/helpers/auth.php';
 require __DIR__ . '/../app/middlewares/auth.php';
@@ -34,16 +36,7 @@ spl_autoload_register(function (string $class): void {
 });
 
 $config = require __DIR__ . '/../app/config/config.php';
-
-session_name($config['session_name']);
-session_set_cookie_params([
-    'httponly' => true,
-    'samesite' => 'Strict',
-    'secure' => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on',
-]);
-if (session_status() !== PHP_SESSION_ACTIVE) {
-    session_start();
-}
+start_secure_session($config);
 
 $router = new Router();
 
@@ -58,16 +51,16 @@ $exportController = new ExportController();
 
 $router->add('GET', '/', function (): void {
     if (isset($_SESSION['user_id'])) {
-        header('Location: /dashboard');
+        header('Location: ' . AUTH_POST_LOGIN_ROUTE);
         exit;
     }
-    header('Location: /auth/login');
+    header('Location: ' . AUTH_LOGIN_ROUTE);
     exit;
 });
 
-$router->add('GET', '/auth/login', [$authController, 'loginForm']);
-$router->add('POST', '/auth/login', [$authController, 'login']);
-$router->add('GET', '/auth/logout', [$authController, 'logout']);
+$router->add('GET', AUTH_LOGIN_ROUTE, [$authController, 'loginForm']);
+$router->add('POST', AUTH_LOGIN_POST_ROUTE, [$authController, 'loginPost']);
+$router->add('GET', AUTH_LOGOUT_ROUTE, [$authController, 'logout']);
 
 $router->add('GET', '/dashboard', [$dashboardController, 'index'], ['auth_middleware']);
 

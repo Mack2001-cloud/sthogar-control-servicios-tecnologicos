@@ -8,28 +8,29 @@ function auth_user(): ?array
         return null;
     }
 
-    return User::find((int) $_SESSION['user_id']);
+    return User::findById((int) $_SESSION['user_id']);
 }
 
 function login_user(array $user): void
 {
     $_SESSION['user_id'] = $user['id'];
-    $_SESSION['role'] = $user['role'];
+    $_SESSION['user_name'] = $user['name'];
+    $_SESSION['user_role'] = $user['role'];
 }
 
 function logout_user(): void
 {
-    unset($_SESSION['user_id'], $_SESSION['role']);
+    unset($_SESSION['user_id'], $_SESSION['user_name'], $_SESSION['user_role']);
 }
 
 function is_admin(): bool
 {
-    return ($_SESSION['role'] ?? '') === 'admin';
+    return ($_SESSION['user_role'] ?? '') === 'admin';
 }
 
 function require_role(string $role): void
 {
-    if (($_SESSION['role'] ?? '') !== $role) {
+    if (($_SESSION['user_role'] ?? '') !== $role) {
         http_response_code(403);
         echo view('partials/403');
         exit;
