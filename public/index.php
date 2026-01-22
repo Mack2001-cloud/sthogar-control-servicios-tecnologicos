@@ -9,6 +9,7 @@ use App\Controllers\EquiposController;
 use App\Controllers\PagosController;
 use App\Controllers\AdjuntosController;
 use App\Controllers\ExportController;
+use App\Controllers\AdminTecnicosController;
 
 require __DIR__ . '/../app/config/auth.php';
 require __DIR__ . '/../app/helpers/view.php';
@@ -49,6 +50,7 @@ $equiposController = new EquiposController();
 $pagosController = new PagosController();
 $adjuntosController = new AdjuntosController();
 $exportController = new ExportController();
+$adminTecnicosController = new AdminTecnicosController();
 
 $adminMiddleware = ['auth_middleware', role_required('admin')];
 $generalMiddleware = ['auth_middleware', role_required_any(['admin', 'tecnico'])];
@@ -96,5 +98,10 @@ $router->add('POST', '/adjuntos/upload', [$adjuntosController, 'upload'], $gener
 
 $router->add('GET', '/export/clientes.csv', [$exportController, 'clientes'], $adminMiddleware);
 $router->add('GET', '/export/servicios.csv', [$exportController, 'servicios'], $adminMiddleware);
+
+$router->add('GET', '/admin/tecnicos', [$adminTecnicosController, 'index'], $adminMiddleware);
+$router->add('GET', '/admin/tecnicos/edit', [$adminTecnicosController, 'editForm'], $adminMiddleware);
+$router->add('POST', '/admin/tecnicos/edit', [$adminTecnicosController, 'update'], $adminMiddleware);
+$router->add('POST', '/admin/tecnicos/toggle', [$adminTecnicosController, 'toggle'], $adminMiddleware);
 
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
