@@ -57,6 +57,8 @@ class AdminTecnicosController
         $fechaIngreso = trim($_POST['fecha_ingreso'] ?? '');
         $notas = trim($_POST['notas'] ?? '');
         $activo = (int) ($_POST['activo'] ?? 0);
+        $password = (string) ($_POST['password'] ?? '');
+        $passwordConfirm = (string) ($_POST['password_confirm'] ?? '');
 
         if (!required($telefono) || !required($direccion)) {
             set_flash('danger', 'Teléfono y dirección son obligatorios.');
@@ -99,6 +101,23 @@ class AdminTecnicosController
             }
         }
 
+        $passwordHash = null;
+        if ($password !== '') {
+            if ($password !== $passwordConfirm) {
+                set_flash('danger', 'Las contraseñas no coinciden.');
+                header('Location: /admin/tecnicos/edit?id=' . $id);
+                exit;
+            }
+
+            if (mb_strlen($password) < 8) {
+                set_flash('danger', 'La contraseña debe tener al menos 8 caracteres.');
+                header('Location: /admin/tecnicos/edit?id=' . $id);
+                exit;
+            }
+
+            $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+        }
+
         Tecnico::update($id, [
             'telefono' => $telefono,
             'direccion' => $direccion,
@@ -109,6 +128,7 @@ class AdminTecnicosController
             'usuario_id' => (int) $tecnico['usuario_id'],
             'usuario_nombre' => $usuarioNombre,
             'usuario_email' => $usuarioEmail,
+            'usuario_pass_hash' => $passwordHash,
         ]);
 
         set_flash('success', 'Técnico actualizado correctamente.');
