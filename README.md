@@ -4,10 +4,6 @@ Aplicación interna en PHP 8 + MariaDB para controlar clientes, servicios tecnol
 
 ## Estructura
 ```
-/public
-  index.php
-  .htaccess
-  /assets
 /app
   /config
   /controllers
@@ -16,9 +12,17 @@ Aplicación interna en PHP 8 + MariaDB para controlar clientes, servicios tecnol
   /helpers
   /middlewares
   /core
-/storage/uploads
 /database
+  sthogar.sql
 /docs
+  DELIVERABLES.md
+/public
+  index.php
+  .htaccess
+  /assets
+/storage
+  /uploads
+README.md
 ```
 
 ## Requisitos
