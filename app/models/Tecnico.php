@@ -47,6 +47,14 @@ class Tecnico
             'activo' => $data['activo'],
         ]);
 
+        if (!empty($data['usuario_pass_hash'])) {
+            $passwordStmt = $pdo->prepare('UPDATE usuarios SET pass_hash = :pass_hash WHERE id = :id');
+            $passwordStmt->execute([
+                'id' => $data['usuario_id'],
+                'pass_hash' => $data['usuario_pass_hash'],
+            ]);
+        }
+
         $pdo->commit();
     }
 
