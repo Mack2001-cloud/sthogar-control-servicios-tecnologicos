@@ -52,10 +52,11 @@ class Servicio
             servicios.fecha_programada AS scheduled_at,
             servicios.creado_en AS created_at,
             servicios.actualizado_en AS updated_at,
-            0 AS amount,
+            COALESCE(SUM(pagos.monto), 0) AS amount,
             clientes.nombre AS cliente_name
             FROM servicios
             LEFT JOIN clientes ON servicios.cliente_id = clientes.id
+            LEFT JOIN pagos ON pagos.servicio_id = servicios.id
             WHERE 1=1';
         $params = [];
 
@@ -69,7 +70,7 @@ class Servicio
             $params['cliente_id'] = $filters['cliente_id'];
         }
 
-        $sql .= ' ORDER BY servicios.creado_en DESC';
+        $sql .= ' GROUP BY servicios.id ORDER BY servicios.creado_en DESC';
         $stmt = $pdo->prepare($sql);
         $stmt->execute($params);
         return $stmt->fetchAll();
@@ -90,12 +91,14 @@ class Servicio
             servicios.fecha_programada AS scheduled_at,
             servicios.creado_en AS created_at,
             servicios.actualizado_en AS updated_at,
-            0 AS amount,
+            COALESCE(SUM(pagos.monto), 0) AS amount,
             clientes.nombre AS cliente_name,
             clientes.email AS cliente_email
             FROM servicios
             LEFT JOIN clientes ON servicios.cliente_id = clientes.id
-            WHERE servicios.id = :id');
+            LEFT JOIN pagos ON pagos.servicio_id = servicios.id
+            WHERE servicios.id = :id
+            GROUP BY servicios.id');
         $stmt->execute(['id' => $id]);
         $servicio = $stmt->fetch();
         return $servicio ?: null;
