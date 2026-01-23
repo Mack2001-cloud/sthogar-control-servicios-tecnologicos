@@ -36,12 +36,10 @@ ob_start();
         <div class="card h-100">
             <div class="card-body">
                 <h6 class="text-uppercase text-muted">Tema del panel</h6>
-                <label class="form-label" for="theme-select">Selecciona un tema</label>
-                <select class="form-select" id="theme-select">
-                    <option value="dark">Oscuro</option>
-                    <option value="light">Claro</option>
-                </select>
-                <p class="text-muted small mt-2 mb-0">Elige el tema que prefieras para todo el panel.</p>
+                <button class="btn btn-outline-light" id="theme-toggle" type="button">
+                    Cambiar tema
+                </button>
+                <p class="text-muted small mt-2 mb-0">Alterna entre modo oscuro y claro.</p>
             </div>
         </div>
     </div>

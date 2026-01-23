@@ -72,19 +72,27 @@ $user = auth_user();
     (() => {
         const storageKey = 'sthogar-theme';
         const root = document.documentElement;
-        const select = document.getElementById('theme-select');
+        const toggleButton = document.getElementById('theme-toggle');
 
-        if (!select) {
+        if (!toggleButton) {
             return;
         }
 
-        const currentTheme = root.getAttribute('data-theme') || 'dark';
-        select.value = currentTheme;
+        const getCurrentTheme = () => root.getAttribute('data-theme') || 'dark';
+        const setButtonLabel = (theme) => {
+            const nextLabel = theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro';
+            toggleButton.textContent = nextLabel;
+            toggleButton.setAttribute('aria-pressed', theme === 'light' ? 'true' : 'false');
+        };
 
-        select.addEventListener('change', (event) => {
-            const nextTheme = event.target.value;
+        setButtonLabel(getCurrentTheme());
+
+        toggleButton.addEventListener('click', () => {
+            const currentTheme = getCurrentTheme();
+            const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
             root.setAttribute('data-theme', nextTheme);
             localStorage.setItem(storageKey, nextTheme);
+            setButtonLabel(nextTheme);
         });
     })();
 </script>
