@@ -1,8 +1,8 @@
 <?php
 
-function e(string $value): string
+function e(?string $value): string
 {
-    return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+    return htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8');
 }
 
 function view(string $view, array $data = []): string
