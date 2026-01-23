@@ -12,10 +12,9 @@ use App\Models\Adjunto;
 class ServiciosController
 {
     private array $statusOptions = [
-        'nuevo' => 'Nuevo',
-        'en_progreso' => 'En progreso',
-        'en_espera' => 'En espera',
-        'completado' => 'Completado',
+        'pendiente' => 'Pendiente',
+        'proceso' => 'En proceso',
+        'finalizado' => 'Finalizado',
         'cancelado' => 'Cancelado',
     ];
 
@@ -57,7 +56,7 @@ class ServiciosController
             'cliente_id' => (int) ($_POST['cliente_id'] ?? 0),
             'type' => trim($_POST['type'] ?? ''),
             'description' => trim($_POST['description'] ?? ''),
-            'status' => $_POST['status'] ?? 'nuevo',
+            'status' => $_POST['status'] ?? 'pendiente',
             'scheduled_at' => $_POST['scheduled_at'] ?? null,
             'amount' => (float) ($_POST['amount'] ?? 0),
         ];
@@ -144,7 +143,7 @@ class ServiciosController
             'cliente_id' => (int) ($_POST['cliente_id'] ?? 0),
             'type' => trim($_POST['type'] ?? ''),
             'description' => trim($_POST['description'] ?? ''),
-            'status' => $_POST['status'] ?? 'nuevo',
+            'status' => $_POST['status'] ?? 'pendiente',
             'scheduled_at' => $_POST['scheduled_at'] ?? null,
             'amount' => (float) ($_POST['amount'] ?? 0),
         ];
@@ -159,7 +158,7 @@ class ServiciosController
     {
         verify_csrf();
         $id = (int) ($_POST['servicio_id'] ?? 0);
-        $status = $_POST['status'] ?? 'nuevo';
+        $status = $_POST['status'] ?? 'pendiente';
         $note = trim($_POST['note'] ?? '');
 
         Servicio::updateStatus($id, $status);

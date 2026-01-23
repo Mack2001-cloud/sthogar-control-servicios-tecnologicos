@@ -9,15 +9,15 @@ class Cliente
     public static function all(?string $search = null): array
     {
         $pdo = Database::connection();
-        $sql = 'SELECT * FROM clientes';
+        $sql = 'SELECT id, nombre AS name, email, telefono AS phone, direccion AS address, referencia AS notes, creado_en AS created_at FROM clientes';
         $params = [];
 
         if ($search) {
-            $sql .= ' WHERE name LIKE :term OR email LIKE :term OR phone LIKE :term';
+            $sql .= ' WHERE nombre LIKE :term OR email LIKE :term OR telefono LIKE :term OR direccion LIKE :term OR referencia LIKE :term';
             $params['term'] = '%' . $search . '%';
         }
 
-        $sql .= ' ORDER BY created_at DESC';
+        $sql .= ' ORDER BY creado_en DESC';
         $stmt = $pdo->prepare($sql);
         $stmt->execute($params);
         return $stmt->fetchAll();
@@ -26,7 +26,7 @@ class Cliente
     public static function find(int $id): ?array
     {
         $pdo = Database::connection();
-        $stmt = $pdo->prepare('SELECT * FROM clientes WHERE id = :id');
+        $stmt = $pdo->prepare('SELECT id, nombre AS name, email, telefono AS phone, direccion AS address, referencia AS notes, creado_en AS created_at FROM clientes WHERE id = :id');
         $stmt->execute(['id' => $id]);
         $cliente = $stmt->fetch();
         return $cliente ?: null;
@@ -35,7 +35,7 @@ class Cliente
     public static function create(array $data): int
     {
         $pdo = Database::connection();
-        $stmt = $pdo->prepare('INSERT INTO clientes (name, email, phone, address, notes) VALUES (:name, :email, :phone, :address, :notes)');
+        $stmt = $pdo->prepare('INSERT INTO clientes (nombre, email, telefono, direccion, referencia) VALUES (:name, :email, :phone, :address, :notes)');
         $stmt->execute([
             'name' => $data['name'],
             'email' => $data['email'],
@@ -49,7 +49,7 @@ class Cliente
     public static function update(int $id, array $data): void
     {
         $pdo = Database::connection();
-        $stmt = $pdo->prepare('UPDATE clientes SET name = :name, email = :email, phone = :phone, address = :address, notes = :notes WHERE id = :id');
+        $stmt = $pdo->prepare('UPDATE clientes SET nombre = :name, email = :email, telefono = :phone, direccion = :address, referencia = :notes WHERE id = :id');
         $stmt->execute([
             'id' => $id,
             'name' => $data['name'],
