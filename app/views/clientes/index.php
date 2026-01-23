@@ -21,6 +21,7 @@ ob_start();
                 <th>Email</th>
                 <th>Teléfono</th>
                 <th>Dirección</th>
+                <th>Técnico asignado</th>
                 <th>Acciones</th>
             </tr>
             </thead>
@@ -31,6 +32,7 @@ ob_start();
                     <td><?= e($cliente['email']) ?></td>
                     <td><?= e($cliente['phone']) ?></td>
                     <td><?= e($cliente['address']) ?></td>
+                    <td><?= e($cliente['tecnico_name'] ?? 'Sin asignar') ?></td>
                     <td>
                         <div class="d-flex gap-2">
                             <a class="btn btn-sm btn-outline-light" href="/clientes/edit?id=<?= e((string) $cliente['id']) ?>">Editar</a>
@@ -47,7 +49,7 @@ ob_start();
             <?php endforeach; ?>
             <?php if (!$clientes): ?>
                 <tr>
-                    <td colspan="5" class="text-center text-muted">Sin clientes registrados.</td>
+                    <td colspan="6" class="text-center text-muted">Sin clientes registrados.</td>
                 </tr>
             <?php endif; ?>
             </tbody>

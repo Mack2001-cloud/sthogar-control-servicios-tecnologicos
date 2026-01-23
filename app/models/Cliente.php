@@ -9,11 +9,11 @@ class Cliente
     public static function all(?string $search = null): array
     {
         $pdo = Database::connection();
-        $sql = 'SELECT id, nombre AS name, email, telefono AS phone, direccion AS address, referencia AS notes, creado_en AS created_at FROM clientes';
+        $sql = 'SELECT clientes.id, clientes.nombre AS name, clientes.email, clientes.telefono AS phone, clientes.direccion AS address, clientes.referencia AS notes, clientes.tecnico_id, usuarios.nombre AS tecnico_name, clientes.creado_en AS created_at FROM clientes LEFT JOIN tecnicos ON clientes.tecnico_id = tecnicos.id LEFT JOIN usuarios ON tecnicos.usuario_id = usuarios.id';
         $params = [];
 
         if ($search) {
-            $sql .= ' WHERE nombre LIKE :term OR email LIKE :term OR telefono LIKE :term OR direccion LIKE :term OR referencia LIKE :term';
+            $sql .= ' WHERE clientes.nombre LIKE :term OR clientes.email LIKE :term OR clientes.telefono LIKE :term OR clientes.direccion LIKE :term OR clientes.referencia LIKE :term OR usuarios.nombre LIKE :term';
             $params['term'] = '%' . $search . '%';
         }
 
@@ -26,7 +26,7 @@ class Cliente
     public static function find(int $id): ?array
     {
         $pdo = Database::connection();
-        $stmt = $pdo->prepare('SELECT id, nombre AS name, email, telefono AS phone, direccion AS address, referencia AS notes, creado_en AS created_at FROM clientes WHERE id = :id');
+        $stmt = $pdo->prepare('SELECT clientes.id, clientes.nombre AS name, clientes.email, clientes.telefono AS phone, clientes.direccion AS address, clientes.referencia AS notes, clientes.tecnico_id, usuarios.nombre AS tecnico_name, clientes.creado_en AS created_at FROM clientes LEFT JOIN tecnicos ON clientes.tecnico_id = tecnicos.id LEFT JOIN usuarios ON tecnicos.usuario_id = usuarios.id WHERE clientes.id = :id');
         $stmt->execute(['id' => $id]);
         $cliente = $stmt->fetch();
         return $cliente ?: null;
@@ -35,13 +35,14 @@ class Cliente
     public static function create(array $data): int
     {
         $pdo = Database::connection();
-        $stmt = $pdo->prepare('INSERT INTO clientes (nombre, email, telefono, direccion, referencia) VALUES (:name, :email, :phone, :address, :notes)');
+        $stmt = $pdo->prepare('INSERT INTO clientes (nombre, email, telefono, direccion, referencia, tecnico_id) VALUES (:name, :email, :phone, :address, :notes, :tecnico_id)');
         $stmt->execute([
             'name' => $data['name'],
             'email' => $data['email'],
             'phone' => $data['phone'],
             'address' => $data['address'],
             'notes' => $data['notes'],
+            'tecnico_id' => $data['tecnico_id'],
         ]);
         return (int) $pdo->lastInsertId();
     }
@@ -49,7 +50,7 @@ class Cliente
     public static function update(int $id, array $data): void
     {
         $pdo = Database::connection();
-        $stmt = $pdo->prepare('UPDATE clientes SET nombre = :name, email = :email, telefono = :phone, direccion = :address, referencia = :notes WHERE id = :id');
+        $stmt = $pdo->prepare('UPDATE clientes SET nombre = :name, email = :email, telefono = :phone, direccion = :address, referencia = :notes, tecnico_id = :tecnico_id WHERE id = :id');
         $stmt->execute([
             'id' => $id,
             'name' => $data['name'],
@@ -57,6 +58,7 @@ class Cliente
             'phone' => $data['phone'],
             'address' => $data['address'],
             'notes' => $data['notes'],
+            'tecnico_id' => $data['tecnico_id'],
         ]);
     }
 

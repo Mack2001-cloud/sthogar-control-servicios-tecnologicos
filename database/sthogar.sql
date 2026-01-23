@@ -37,8 +37,14 @@ CREATE TABLE clientes (
   email VARCHAR(150) DEFAULT NULL,
   direccion VARCHAR(200) NOT NULL,
   referencia VARCHAR(200) DEFAULT NULL,
+  tecnico_id INT DEFAULT NULL,
   creado_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  INDEX idx_clientes_telefono (telefono)
+  INDEX idx_clientes_telefono (telefono),
+  INDEX idx_clientes_tecnico (tecnico_id),
+  CONSTRAINT fk_clientes_tecnico
+    FOREIGN KEY (tecnico_id) REFERENCES tecnicos(id)
+    ON UPDATE CASCADE
+    ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
 CREATE TABLE servicios (
