@@ -44,6 +44,7 @@ ob_start();
             <tr>
                 <th>Cliente</th>
                 <th>Tipo</th>
+                <th>Técnico</th>
                 <th>Estado</th>
                 <th>Programado</th>
                 <th>Monto</th>
@@ -55,6 +56,7 @@ ob_start();
                 <tr>
                     <td><?= e($servicio['cliente_name']) ?></td>
                     <td><?= e($servicio['type']) ?></td>
+                    <td><?= e($servicio['tecnico_name'] ?? 'Sin asignar') ?></td>
                     <td><span class="badge bg-info text-dark"><?= e($statusOptions[$servicio['status']] ?? $servicio['status']) ?></span></td>
                     <td><?= e($servicio['scheduled_at'] ?? '-') ?></td>
                     <td>$<?= e(number_format((float) $servicio['amount'], 2)) ?></td>
@@ -75,7 +77,7 @@ ob_start();
             <?php endforeach; ?>
             <?php if (!$servicios): ?>
                 <tr>
-                    <td colspan="6" class="text-center text-muted">Sin servicios.</td>
+                    <td colspan="7" class="text-center text-muted">Sin servicios.</td>
                 </tr>
             <?php endif; ?>
             </tbody>

@@ -7,6 +7,8 @@ $servicio = $servicio ?? [
     'status' => 'pendiente',
     'scheduled_at' => '',
     'amount' => 0,
+    'tecnico_id' => null,
+    'tecnico_name' => '',
 ];
 ?>
 <form method="POST" action="<?= e($action) ?>" class="card p-4">
@@ -30,6 +32,22 @@ $servicio = $servicio ?? [
                     <option value="<?= e($type) ?>" <?= $servicio['type'] === $type ? 'selected' : '' ?>><?= e($type) ?></option>
                 <?php endforeach; ?>
             </select>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Técnico asignado</label>
+            <?php if (is_admin()): ?>
+                <select name="tecnico_id" class="form-select">
+                    <option value="">Sin asignar</option>
+                    <?php foreach (($tecnicos ?? []) as $tecnico): ?>
+                        <option value="<?= e((string) $tecnico['id']) ?>" <?= (string) $tecnico['id'] === (string) ($servicio['tecnico_id'] ?? '') ? 'selected' : '' ?>>
+                            <?= e($tecnico['usuario_nombre']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            <?php else: ?>
+                <input type="text" class="form-control" value="<?= e($servicio['tecnico_name'] ?: 'Sin asignar') ?>" readonly>
+                <small class="text-muted">Solo el administrador puede editar el técnico asignado.</small>
+            <?php endif; ?>
         </div>
         <div class="col-md-6">
             <label class="form-label">Estado</label>

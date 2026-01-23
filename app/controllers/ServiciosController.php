@@ -8,6 +8,7 @@ use App\Models\Equipo;
 use App\Models\ServicioLog;
 use App\Models\Pago;
 use App\Models\Adjunto;
+use App\Models\Tecnico;
 
 class ServiciosController
 {
@@ -40,10 +41,12 @@ class ServiciosController
     public function createForm(): void
     {
         $clientes = Cliente::all();
+        $tecnicos = is_admin() ? Tecnico::findAll() : [];
         echo view('servicios/form', [
             'title' => 'Nuevo servicio',
             'servicio' => null,
             'clientes' => $clientes,
+            'tecnicos' => $tecnicos,
             'statusOptions' => $this->statusOptions,
             'action' => '/servicios/create',
         ]);
@@ -52,6 +55,7 @@ class ServiciosController
     public function create(): void
     {
         verify_csrf();
+        $tecnicoId = is_admin() ? (int) ($_POST['tecnico_id'] ?? 0) : 0;
         $data = [
             'cliente_id' => (int) ($_POST['cliente_id'] ?? 0),
             'type' => trim($_POST['type'] ?? ''),
@@ -59,6 +63,7 @@ class ServiciosController
             'status' => $_POST['status'] ?? 'pendiente',
             'scheduled_at' => $_POST['scheduled_at'] ?? null,
             'amount' => (float) ($_POST['amount'] ?? 0),
+            'tecnico_id' => $tecnicoId > 0 ? $tecnicoId : null,
         ];
 
         if (!$data['cliente_id'] || !required($data['type'])) {
@@ -119,10 +124,12 @@ class ServiciosController
         }
 
         $clientes = Cliente::all();
+        $tecnicos = is_admin() ? Tecnico::findAll() : [];
         echo view('servicios/form', [
             'title' => 'Editar servicio',
             'servicio' => $servicio,
             'clientes' => $clientes,
+            'tecnicos' => $tecnicos,
             'statusOptions' => $this->statusOptions,
             'action' => '/servicios/edit?id=' . $id,
         ]);
@@ -139,6 +146,7 @@ class ServiciosController
             return;
         }
 
+        $tecnicoId = is_admin() ? (int) ($_POST['tecnico_id'] ?? 0) : (int) ($servicio['tecnico_id'] ?? 0);
         $data = [
             'cliente_id' => (int) ($_POST['cliente_id'] ?? 0),
             'type' => trim($_POST['type'] ?? ''),
@@ -146,6 +154,7 @@ class ServiciosController
             'status' => $_POST['status'] ?? 'pendiente',
             'scheduled_at' => $_POST['scheduled_at'] ?? null,
             'amount' => (float) ($_POST['amount'] ?? 0),
+            'tecnico_id' => $tecnicoId > 0 ? $tecnicoId : null,
         ];
 
         Servicio::update($id, $data);
