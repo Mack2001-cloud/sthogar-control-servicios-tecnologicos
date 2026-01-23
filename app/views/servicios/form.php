@@ -4,7 +4,7 @@ $servicio = $servicio ?? [
     'cliente_id' => '',
     'type' => '',
     'description' => '',
-    'status' => 'nuevo',
+    'status' => 'pendiente',
     'scheduled_at' => '',
     'amount' => 0,
 ];
