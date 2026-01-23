@@ -19,3 +19,12 @@ function csrf_validate(?string $token = null): bool
 
     return hash_equals($_SESSION['csrf_token'], $token);
 }
+
+function verify_csrf(): void
+{
+    if (!csrf_validate()) {
+        http_response_code(419);
+        echo view('partials/419');
+        exit;
+    }
+}
