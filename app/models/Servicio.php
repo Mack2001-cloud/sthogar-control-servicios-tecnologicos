@@ -53,9 +53,12 @@ class Servicio
             servicios.creado_en AS created_at,
             servicios.actualizado_en AS updated_at,
             COALESCE(SUM(pagos.monto), 0) AS amount,
-            clientes.nombre AS cliente_name
+            clientes.nombre AS cliente_name,
+            usuarios.nombre AS tecnico_name
             FROM servicios
             LEFT JOIN clientes ON servicios.cliente_id = clientes.id
+            LEFT JOIN tecnicos ON servicios.tecnico_id = tecnicos.id
+            LEFT JOIN usuarios ON tecnicos.usuario_id = usuarios.id
             LEFT JOIN pagos ON pagos.servicio_id = servicios.id
             WHERE 1=1';
         $params = [];
@@ -93,9 +96,12 @@ class Servicio
             servicios.actualizado_en AS updated_at,
             COALESCE(SUM(pagos.monto), 0) AS amount,
             clientes.nombre AS cliente_name,
-            clientes.email AS cliente_email
+            clientes.email AS cliente_email,
+            usuarios.nombre AS tecnico_name
             FROM servicios
             LEFT JOIN clientes ON servicios.cliente_id = clientes.id
+            LEFT JOIN tecnicos ON servicios.tecnico_id = tecnicos.id
+            LEFT JOIN usuarios ON tecnicos.usuario_id = usuarios.id
             LEFT JOIN pagos ON pagos.servicio_id = servicios.id
             WHERE servicios.id = :id
             GROUP BY servicios.id');

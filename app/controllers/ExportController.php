@@ -38,13 +38,14 @@ class ExportController
         header('Content-Disposition: attachment; filename="servicios.csv"');
 
         $output = fopen('php://output', 'w');
-        fputcsv($output, ['ID', 'Cliente', 'Tipo', 'Estado', 'Fecha programada', 'Monto']);
+        fputcsv($output, ['ID', 'Cliente', 'Tipo', 'Técnico asignado', 'Estado', 'Fecha programada', 'Monto']);
 
         foreach ($servicios as $servicio) {
             fputcsv($output, [
                 $servicio['id'],
                 $servicio['cliente_name'],
                 $servicio['type'],
+                $servicio['tecnico_name'] ?? 'Sin asignar',
                 $servicio['status'],
                 $servicio['scheduled_at'],
                 $servicio['amount'],

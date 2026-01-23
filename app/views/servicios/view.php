@@ -8,6 +8,7 @@ ob_start();
             <p class="text-muted">Cliente: <?= e($servicio['cliente_name']) ?> (<?= e($servicio['cliente_email'] ?? '') ?>)</p>
             <div class="row">
                 <div class="col-md-6"><strong>Tipo:</strong> <?= e($servicio['type']) ?></div>
+                <div class="col-md-6"><strong>Técnico:</strong> <?= e($servicio['tecnico_name'] ?? 'Sin asignar') ?></div>
                 <div class="col-md-6"><strong>Estado:</strong> <?= e($statusOptions[$servicio['status']] ?? $servicio['status']) ?></div>
                 <div class="col-md-6"><strong>Programado:</strong> <?= e($servicio['scheduled_at'] ?? '-') ?></div>
                 <div class="col-md-6"><strong>Monto:</strong> $<?= e(number_format((float) $servicio['amount'], 2)) ?></div>
