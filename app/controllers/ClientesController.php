@@ -95,9 +95,6 @@ class ClientesController
     public function delete(): void
     {
         verify_csrf();
-        if (!is_admin()) {
-            require_role('admin');
-        }
 
         $id = (int) ($_POST['id'] ?? 0);
         Cliente::delete($id);
