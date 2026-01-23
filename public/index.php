@@ -71,18 +71,18 @@ $router->add('GET', AUTH_LOGOUT_ROUTE, [$authController, 'logout']);
 $router->add('GET', '/dashboard', [$dashboardController, 'index'], $generalMiddleware);
 
 $router->add('GET', '/clientes', [$clientesController, 'index'], $generalMiddleware);
-$router->add('GET', '/clientes/create', [$clientesController, 'createForm'], $adminMiddleware);
-$router->add('POST', '/clientes/create', [$clientesController, 'create'], $adminMiddleware);
-$router->add('GET', '/clientes/edit', [$clientesController, 'editForm'], $adminMiddleware);
-$router->add('POST', '/clientes/edit', [$clientesController, 'update'], $adminMiddleware);
-$router->add('POST', '/clientes/delete', [$clientesController, 'delete'], $adminMiddleware);
+$router->add('GET', '/clientes/create', [$clientesController, 'createForm'], $generalMiddleware);
+$router->add('POST', '/clientes/create', [$clientesController, 'create'], $generalMiddleware);
+$router->add('GET', '/clientes/edit', [$clientesController, 'editForm'], $generalMiddleware);
+$router->add('POST', '/clientes/edit', [$clientesController, 'update'], $generalMiddleware);
+$router->add('POST', '/clientes/delete', [$clientesController, 'delete'], $generalMiddleware);
 
 $router->add('GET', '/servicios', [$serviciosController, 'index'], $generalMiddleware);
 $router->add('GET', '/servicios/create', [$serviciosController, 'createForm'], $generalMiddleware);
 $router->add('POST', '/servicios/create', [$serviciosController, 'create'], $generalMiddleware);
 $router->add('GET', '/servicios/view', [$serviciosController, 'view'], $generalMiddleware);
-$router->add('GET', '/servicios/edit', [$serviciosController, 'editForm'], $adminMiddleware);
-$router->add('POST', '/servicios/edit', [$serviciosController, 'update'], $adminMiddleware);
+$router->add('GET', '/servicios/edit', [$serviciosController, 'editForm'], $generalMiddleware);
+$router->add('POST', '/servicios/edit', [$serviciosController, 'update'], $generalMiddleware);
 $router->add('POST', '/servicios/status', [$serviciosController, 'updateStatus'], $generalMiddleware);
 $router->add('POST', '/servicios/delete', [$serviciosController, 'delete'], $adminMiddleware);
 
