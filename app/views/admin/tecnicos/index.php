@@ -5,6 +5,7 @@ ob_start();
     <div>
         <p class="text-muted mb-0">Gestión de técnicos registrados.</p>
     </div>
+    <a class="btn btn-primary" href="/admin/tecnicos/create">Nuevo técnico</a>
 </div>
 
 <div class="card mt-4">
@@ -35,6 +36,7 @@ ob_start();
                     <td>
                         <div class="d-flex gap-2">
                             <a class="btn btn-sm btn-outline-light" href="/admin/tecnicos/edit?id=<?= e((string) $tecnico['id']) ?>">Editar</a>
+                            <a class="btn btn-sm btn-outline-info" href="/admin/tecnicos/edit?id=<?= e((string) $tecnico['id']) ?>#password-section">Contraseña</a>
                             <form method="POST" action="/admin/tecnicos/toggle" onsubmit="return confirm('¿Cambiar estado del técnico?');">
                                 <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
                                 <input type="hidden" name="id" value="<?= e((string) $tecnico['id']) ?>">
