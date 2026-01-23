@@ -9,7 +9,7 @@ class ServicioLog
     public static function byServicio(int $servicioId): array
     {
         $pdo = Database::connection();
-        $stmt = $pdo->prepare('SELECT bitacora_servicio.id, bitacora_servicio.servicio_id, bitacora_servicio.usuario_id AS user_id, bitacora_servicio.estatus_nuevo AS status, bitacora_servicio.comentario AS note, bitacora_servicio.creado_en AS created_at, usuarios.nombre AS user_name FROM bitacora_servicio LEFT JOIN usuarios ON bitacora_servicio.usuario_id = usuarios.id WHERE servicio_id = :servicio_id ORDER BY creado_en DESC');
+        $stmt = $pdo->prepare('SELECT bitacora_servicio.id, bitacora_servicio.servicio_id, bitacora_servicio.usuario_id AS user_id, bitacora_servicio.estatus_nuevo AS status, bitacora_servicio.comentario AS note, bitacora_servicio.creado_en AS created_at, usuarios.nombre AS user_name FROM bitacora_servicio LEFT JOIN usuarios ON bitacora_servicio.usuario_id = usuarios.id WHERE servicio_id = :servicio_id ORDER BY bitacora_servicio.creado_en DESC');
         $stmt->execute(['servicio_id' => $servicioId]);
         return $stmt->fetchAll();
     }
