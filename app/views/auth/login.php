@@ -15,10 +15,11 @@ $flash = get_flash();
     <div class="row justify-content-center">
         <div class="col-md-6 col-lg-5">
             <div class="card shadow border-0">
-                <div class="card-body p-4">
+                <div class="card-body p-4 p-md-5 auth-card">
                     <div class="text-center mb-4">
-                        <h1 class="h4">ST-Hogar</h1>
-                        <p class="text-muted mb-0">Ingreso al panel interno</p>
+                        <span class="auth-badge">Acceso seguro</span>
+                        <h1 class="h3 mt-3 mb-2">ST-Hogar</h1>
+                        <p class="text-muted mb-0">Bienvenido, inicia sesión para continuar</p>
                     </div>
 
                     <?php if ($flash): ?>
@@ -27,21 +28,23 @@ $flash = get_flash();
                         </div>
                     <?php endif; ?>
 
-                    <form method="POST" action="<?= e(AUTH_LOGIN_POST_ROUTE) ?>">
+                    <form method="POST" action="<?= e(AUTH_LOGIN_POST_ROUTE) ?>" class="auth-form">
                         <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
                         <div class="mb-3">
                             <label class="form-label">Correo</label>
-                            <input type="email" name="email" class="form-control" required>
+                            <input type="email" name="email" class="form-control" placeholder="tucorreo@ejemplo.com" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Contraseña</label>
-                            <input type="password" name="password" class="form-control" required>
+                            <input type="password" name="password" class="form-control" placeholder="••••••••" required>
                         </div>
                         <button class="btn btn-primary w-100" type="submit">Ingresar</button>
+                        <p class="text-center text-muted small mt-3 mb-0">
+                            ¿Necesitas ayuda? Escribe a soporte@sthogar.test
+                        </p>
                     </form>
                 </div>
             </div>
-            <p class="text-center text-muted small mt-3">Admin: admin@sthogar.test / clave: Admin123*</p>
         </div>
     </div>
 </div>
