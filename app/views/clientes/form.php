@@ -6,6 +6,8 @@ $cliente = $cliente ?? [
     'phone' => '',
     'address' => '',
     'notes' => '',
+    'tecnico_id' => null,
+    'tecnico_name' => '',
 ];
 ?>
 <form method="POST" action="<?= e($action) ?>" class="card p-4">
@@ -26,6 +28,22 @@ $cliente = $cliente ?? [
         <div class="col-md-6">
             <label class="form-label">Dirección</label>
             <input type="text" name="address" class="form-control" value="<?= e($cliente['address']) ?>">
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Técnico asignado</label>
+            <?php if (is_admin()): ?>
+                <select name="tecnico_id" class="form-select">
+                    <option value="">Sin asignar</option>
+                    <?php foreach (($tecnicos ?? []) as $tecnico): ?>
+                        <option value="<?= e((string) $tecnico['id']) ?>" <?= (string) $tecnico['id'] === (string) ($cliente['tecnico_id'] ?? '') ? 'selected' : '' ?>>
+                            <?= e($tecnico['usuario_nombre']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            <?php else: ?>
+                <input type="text" class="form-control" value="<?= e($cliente['tecnico_name'] ?: 'Sin asignar') ?>" readonly>
+                <small class="text-muted">Solo el administrador puede editar el técnico asignado.</small>
+            <?php endif; ?>
         </div>
         <div class="col-12">
             <label class="form-label">Notas</label>

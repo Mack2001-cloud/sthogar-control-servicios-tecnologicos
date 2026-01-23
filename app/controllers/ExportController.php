@@ -14,7 +14,7 @@ class ExportController
         header('Content-Disposition: attachment; filename="clientes.csv"');
 
         $output = fopen('php://output', 'w');
-        fputcsv($output, ['ID', 'Nombre', 'Email', 'Teléfono', 'Dirección', 'Notas']);
+        fputcsv($output, ['ID', 'Nombre', 'Email', 'Teléfono', 'Dirección', 'Notas', 'Técnico asignado']);
 
         foreach ($clientes as $cliente) {
             fputcsv($output, [
@@ -24,6 +24,7 @@ class ExportController
                 $cliente['phone'],
                 $cliente['address'],
                 $cliente['notes'],
+                $cliente['tecnico_name'] ?? 'Sin asignar',
             ]);
         }
 

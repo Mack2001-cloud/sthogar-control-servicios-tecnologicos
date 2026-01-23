@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Cliente;
+use App\Models\Tecnico;
 
 class ClientesController
 {
@@ -20,22 +21,27 @@ class ClientesController
 
     public function createForm(): void
     {
+        $tecnicos = is_admin() ? Tecnico::findAll() : [];
+
         echo view('clientes/form', [
             'title' => 'Nuevo cliente',
             'cliente' => null,
             'action' => '/clientes/create',
+            'tecnicos' => $tecnicos,
         ]);
     }
 
     public function create(): void
     {
         verify_csrf();
+        $tecnicoId = is_admin() ? (int) ($_POST['tecnico_id'] ?? 0) : 0;
         $data = [
             'name' => trim($_POST['name'] ?? ''),
             'email' => trim($_POST['email'] ?? ''),
             'phone' => trim($_POST['phone'] ?? ''),
             'address' => trim($_POST['address'] ?? ''),
             'notes' => trim($_POST['notes'] ?? ''),
+            'tecnico_id' => $tecnicoId > 0 ? $tecnicoId : null,
         ];
 
         if (!required($data['name'])) {
@@ -60,10 +66,13 @@ class ClientesController
             return;
         }
 
+        $tecnicos = is_admin() ? Tecnico::findAll() : [];
+
         echo view('clientes/form', [
             'title' => 'Editar cliente',
             'cliente' => $cliente,
             'action' => '/clientes/edit?id=' . $id,
+            'tecnicos' => $tecnicos,
         ]);
     }
 
@@ -78,12 +87,14 @@ class ClientesController
             return;
         }
 
+        $tecnicoId = is_admin() ? (int) ($_POST['tecnico_id'] ?? 0) : (int) ($cliente['tecnico_id'] ?? 0);
         $data = [
             'name' => trim($_POST['name'] ?? ''),
             'email' => trim($_POST['email'] ?? ''),
             'phone' => trim($_POST['phone'] ?? ''),
             'address' => trim($_POST['address'] ?? ''),
             'notes' => trim($_POST['notes'] ?? ''),
+            'tecnico_id' => $tecnicoId > 0 ? $tecnicoId : null,
         ];
 
         Cliente::update($id, $data);
