@@ -10,6 +10,18 @@ $user = auth_user();
     <title><?= e($title ?? 'ST-Hogar') ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/styles.css">
+    <script>
+        (() => {
+            const storageKey = 'sthogar-theme';
+            const root = document.documentElement;
+            const storedTheme = localStorage.getItem(storageKey);
+            if (storedTheme === 'light' || storedTheme === 'dark') {
+                root.setAttribute('data-theme', storedTheme);
+            } else {
+                root.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
 </head>
 <body class="app-body">
 <div class="d-flex">
@@ -56,5 +68,25 @@ $user = auth_user();
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    (() => {
+        const storageKey = 'sthogar-theme';
+        const root = document.documentElement;
+        const select = document.getElementById('theme-select');
+
+        if (!select) {
+            return;
+        }
+
+        const currentTheme = root.getAttribute('data-theme') || 'dark';
+        select.value = currentTheme;
+
+        select.addEventListener('change', (event) => {
+            const nextTheme = event.target.value;
+            root.setAttribute('data-theme', nextTheme);
+            localStorage.setItem(storageKey, nextTheme);
+        });
+    })();
+</script>
 </body>
 </html>
