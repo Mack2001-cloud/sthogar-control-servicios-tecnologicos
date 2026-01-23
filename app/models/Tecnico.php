@@ -23,6 +23,44 @@ class Tecnico
         return $tecnico ?: null;
     }
 
+    public static function create(array $data): int
+    {
+        $pdo = Database::connection();
+        $pdo->beginTransaction();
+
+        try {
+            $userStmt = $pdo->prepare('INSERT INTO usuarios (nombre, email, pass_hash, rol, activo) VALUES (:nombre, :email, :pass_hash, :rol, :activo)');
+            $userStmt->execute([
+                'nombre' => $data['usuario_nombre'],
+                'email' => $data['usuario_email'],
+                'pass_hash' => $data['usuario_pass_hash'],
+                'rol' => 'tecnico',
+                'activo' => $data['activo'],
+            ]);
+
+            $usuarioId = (int) $pdo->lastInsertId();
+
+            $stmt = $pdo->prepare('INSERT INTO tecnicos (usuario_id, telefono, direccion, especialidad, fecha_ingreso, notas, activo) VALUES (:usuario_id, :telefono, :direccion, :especialidad, :fecha_ingreso, :notas, :activo)');
+            $stmt->execute([
+                'usuario_id' => $usuarioId,
+                'telefono' => $data['telefono'],
+                'direccion' => $data['direccion'],
+                'especialidad' => $data['especialidad'],
+                'fecha_ingreso' => $data['fecha_ingreso'],
+                'notas' => $data['notas'],
+                'activo' => $data['activo'],
+            ]);
+
+            $tecnicoId = (int) $pdo->lastInsertId();
+            $pdo->commit();
+
+            return $tecnicoId;
+        } catch (\Throwable $e) {
+            $pdo->rollBack();
+            throw $e;
+        }
+    }
+
     public static function update(int $id, array $data): void
     {
         $pdo = Database::connection();

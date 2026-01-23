@@ -47,9 +47,10 @@ $tecnico = $tecnico ?? [];
             <label class="form-label">Notas</label>
             <textarea name="notas" class="form-control" rows="3"><?= e($tecnico['notas'] ?? '') ?></textarea>
         </div>
-        <div class="col-12">
+        <div class="col-12" id="password-section">
             <hr>
             <h6 class="text-uppercase text-muted mb-3">Contraseña del técnico</h6>
+            <p class="text-muted mb-0">Actualiza la contraseña si el técnico necesita nuevos accesos.</p>
         </div>
         <div class="col-md-6">
             <label class="form-label">Nueva contraseña</label>

@@ -100,6 +100,8 @@ $router->add('GET', '/export/clientes.csv', [$exportController, 'clientes'], $ad
 $router->add('GET', '/export/servicios.csv', [$exportController, 'servicios'], $adminMiddleware);
 
 $router->add('GET', '/admin/tecnicos', [$adminTecnicosController, 'index'], $adminMiddleware);
+$router->add('GET', '/admin/tecnicos/create', [$adminTecnicosController, 'createForm'], $adminMiddleware);
+$router->add('POST', '/admin/tecnicos/create', [$adminTecnicosController, 'create'], $adminMiddleware);
 $router->add('GET', '/admin/tecnicos/edit', [$adminTecnicosController, 'editForm'], $adminMiddleware);
 $router->add('POST', '/admin/tecnicos/edit', [$adminTecnicosController, 'update'], $adminMiddleware);
 $router->add('POST', '/admin/tecnicos/toggle', [$adminTecnicosController, 'toggle'], $adminMiddleware);
