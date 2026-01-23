@@ -17,7 +17,7 @@ class Cliente
             $params['term'] = '%' . $search . '%';
         }
 
-        $sql .= ' ORDER BY creado_en DESC';
+        $sql .= ' ORDER BY clientes.creado_en DESC';
         $stmt = $pdo->prepare($sql);
         $stmt->execute($params);
         return $stmt->fetchAll();
