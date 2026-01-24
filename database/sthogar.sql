@@ -80,6 +80,26 @@ CREATE TABLE servicios (
     ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
+CREATE TABLE servicios_documentacion (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  servicio_id INT NOT NULL,
+  cliente VARCHAR(150) DEFAULT NULL,
+  direccion VARCHAR(200) DEFAULT NULL,
+  fecha DATE DEFAULT NULL,
+  items LONGTEXT NOT NULL,
+  observaciones TEXT DEFAULT NULL,
+  responsable_venta VARCHAR(150) DEFAULT NULL,
+  cliente_firma VARCHAR(150) DEFAULT NULL,
+  total DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  creado_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  actualizado_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE INDEX idx_servicios_documentacion_servicio (servicio_id),
+  CONSTRAINT fk_servicios_documentacion_servicio
+    FOREIGN KEY (servicio_id) REFERENCES servicios(id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
+) ENGINE=InnoDB;
+
 CREATE TABLE equipos (
   id INT AUTO_INCREMENT PRIMARY KEY,
   cliente_id INT NOT NULL,

@@ -86,6 +86,7 @@ $router->add('GET', '/servicios/edit', [$serviciosController, 'editForm'], $gene
 $router->add('POST', '/servicios/edit', [$serviciosController, 'update'], $generalMiddleware);
 $router->add('POST', '/servicios/status', [$serviciosController, 'updateStatus'], $generalMiddleware);
 $router->add('POST', '/servicios/presupuesto', [$serviciosController, 'updateBudget'], $generalMiddleware);
+$router->add('POST', '/servicios/documentacion', [$serviciosController, 'updateDocumentation'], $generalMiddleware);
 $router->add('POST', '/servicios/delete', [$serviciosController, 'delete'], $adminMiddleware);
 
 $router->add('GET', '/equipos', [$equiposController, 'index'], $generalMiddleware);
