@@ -91,7 +91,7 @@ class ServiciosController
             'description' => trim($_POST['description'] ?? ''),
             'status' => $_POST['status'] ?? 'pendiente',
             'scheduled_at' => $_POST['scheduled_at'] ?? null,
-            'amount' => (float) ($_POST['amount'] ?? 0),
+            'estimated_amount' => (float) ($_POST['amount'] ?? 0),
             'tecnico_id' => $tecnicoId > 0 ? $tecnicoId : null,
         ];
 
@@ -183,7 +183,7 @@ class ServiciosController
             'description' => trim($_POST['description'] ?? ''),
             'status' => $_POST['status'] ?? 'pendiente',
             'scheduled_at' => $_POST['scheduled_at'] ?? null,
-            'amount' => (float) ($_POST['amount'] ?? 0),
+            'estimated_amount' => (float) ($_POST['amount'] ?? 0),
             'tecnico_id' => $tecnicoId > 0 ? $tecnicoId : null,
         ];
 

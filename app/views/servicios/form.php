@@ -7,7 +7,7 @@ $servicio = array_merge([
     'description' => '',
     'status' => 'pendiente',
     'scheduled_at' => '',
-    'amount' => 0,
+    'estimated_amount' => 0,
     'tecnico_id' => null,
     'tecnico_name' => '',
 ], $servicio ?? []);
@@ -72,7 +72,7 @@ $servicio = array_merge([
         </div>
         <div class="col-md-6">
             <label class="form-label">Monto estimado</label>
-            <input type="number" step="0.01" name="amount" class="form-control" value="<?= e((string) $servicio['amount']) ?>">
+            <input type="number" step="0.01" name="amount" class="form-control" value="<?= e((string) $servicio['estimated_amount']) ?>">
         </div>
         <div class="col-12">
             <label class="form-label">Descripción</label>
