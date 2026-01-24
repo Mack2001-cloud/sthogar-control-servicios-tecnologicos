@@ -69,6 +69,16 @@ class Cliente
         $stmt->execute(['id' => $id]);
     }
 
+    public static function dependencyCounts(int $id): array
+    {
+        $pdo = Database::connection();
+        $stmt = $pdo->prepare('SELECT
+            (SELECT COUNT(*) FROM servicios WHERE cliente_id = :id) AS servicios,
+            (SELECT COUNT(*) FROM equipos WHERE cliente_id = :id) AS equipos');
+        $stmt->execute(['id' => $id]);
+        return $stmt->fetch() ?: ['servicios' => 0, 'equipos' => 0];
+    }
+
     public static function countAll(): int
     {
         $pdo = Database::connection();
