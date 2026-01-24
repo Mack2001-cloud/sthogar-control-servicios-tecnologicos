@@ -9,6 +9,7 @@ use App\Models\ServicioLog;
 use App\Models\Pago;
 use App\Models\Adjunto;
 use App\Models\Tecnico;
+use App\Models\ServicioDocumentacion;
 
 class ServiciosController
 {
@@ -129,6 +130,7 @@ class ServiciosController
         $pagos = Pago::byServicio($id);
         $adjuntos = Adjunto::byServicio($id);
         $totalPagos = Pago::totalByServicio($id);
+        $documentacion = ServicioDocumentacion::findByServicio($id);
 
         echo view('servicios/view', [
             'title' => 'Detalle de servicio',
@@ -139,6 +141,7 @@ class ServiciosController
             'adjuntos' => $adjuntos,
             'totalPagos' => $totalPagos,
             'statusOptions' => $this->statusOptions,
+            'documentacion' => $documentacion,
         ]);
     }
 
@@ -240,6 +243,51 @@ class ServiciosController
         ]);
 
         set_flash('success', 'Presupuesto actualizado.');
+        header('Location: /servicios/view?id=' . $id);
+        exit;
+    }
+
+    public function updateDocumentation(): void
+    {
+        verify_csrf();
+        $id = (int) ($_POST['servicio_id'] ?? 0);
+        $servicio = Servicio::find($id);
+        if (!$servicio) {
+            http_response_code(404);
+            echo view('partials/404');
+            return;
+        }
+
+        $concepts = $_POST['concept'] ?? [];
+        $units = $_POST['unit'] ?? [];
+        $quantities = $_POST['quantity'] ?? [];
+        $unitPrices = $_POST['unit_price'] ?? [];
+        $amounts = $_POST['amount'] ?? [];
+        $maxRows = max(count($concepts), count($units), count($quantities), count($unitPrices), count($amounts), 8);
+        $items = [];
+
+        for ($i = 0; $i < $maxRows; $i++) {
+            $items[] = [
+                'concept' => trim((string) ($concepts[$i] ?? '')),
+                'unit' => trim((string) ($units[$i] ?? '')),
+                'quantity' => trim((string) ($quantities[$i] ?? '')),
+                'unit_price' => trim((string) ($unitPrices[$i] ?? '')),
+                'amount' => trim((string) ($amounts[$i] ?? '')),
+            ];
+        }
+
+        ServicioDocumentacion::upsertByServicio($id, [
+            'cliente' => trim((string) ($_POST['document_cliente'] ?? '')),
+            'direccion' => trim((string) ($_POST['document_direccion'] ?? '')),
+            'fecha' => $_POST['document_date'] ?? null,
+            'items' => $items,
+            'observaciones' => trim((string) ($_POST['document_observaciones'] ?? '')),
+            'responsable_venta' => trim((string) ($_POST['document_responsable'] ?? '')),
+            'cliente_firma' => trim((string) ($_POST['document_cliente_firma'] ?? '')),
+            'total' => (float) ($_POST['document_total'] ?? 0),
+        ]);
+
+        set_flash('success', 'Hoja general actualizada.');
         header('Location: /servicios/view?id=' . $id);
         exit;
     }
