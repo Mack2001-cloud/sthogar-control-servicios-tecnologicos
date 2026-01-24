@@ -30,6 +30,21 @@ CREATE TABLE tecnicos (
     ON DELETE RESTRICT
 ) ENGINE=InnoDB;
 
+CREATE TABLE agentes_ventas (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  usuario_id INT NOT NULL UNIQUE,
+  telefono VARCHAR(50) NOT NULL,
+  direccion VARCHAR(200) NOT NULL,
+  fecha_ingreso DATE DEFAULT NULL,
+  notas TEXT DEFAULT NULL,
+  activo TINYINT(1) NOT NULL DEFAULT 1,
+  creado_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_agentes_ventas_usuario
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+    ON UPDATE CASCADE
+    ON DELETE RESTRICT
+) ENGINE=InnoDB;
+
 CREATE TABLE clientes (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nombre VARCHAR(150) NOT NULL,
@@ -182,8 +197,12 @@ INSERT INTO usuarios (nombre, email, pass_hash, rol, activo) VALUES
 
 -- tecnicos.id = 1 (Carlos), tecnicos.id = 2 (Lucia)
 INSERT INTO tecnicos (usuario_id, telefono, direccion, especialidad, fecha_ingreso, notas, activo) VALUES
-  (2, '55-1000-2000', 'Av. Reforma 123, CDMX', 'CCTV', '2022-04-10', 'Especialista en CCTV residencial.', 1),
-  (3, '55-3000-4000', 'Calle Norte 456, CDMX', 'RED', '2023-01-18', 'Soporte en redes y cableado estructurado.', 1);
+  (3, '55-1000-2000', 'Av. Reforma 123, CDMX', 'CCTV', '2022-04-10', 'Especialista en CCTV residencial.', 1),
+  (4, '55-3000-4000', 'Calle Norte 456, CDMX', 'RED', '2023-01-18', 'Soporte en redes y cableado estructurado.', 1);
+
+-- agentes_ventas.id = 1 (Ventas Sthogar)
+INSERT INTO agentes_ventas (usuario_id, telefono, direccion, fecha_ingreso, notas, activo) VALUES
+  (2, '55-2000-3000', 'Av. Insurgentes 500, CDMX', '2021-11-05', 'Contacto principal de ventas.', 1);
 
 INSERT INTO clientes (nombre, telefono, email, direccion, referencia) VALUES
   ('Comercial Nova', '55-1111-2222', 'contacto@comercialnova.mx', 'Insurgentes 890, CDMX', 'Frente a parque central'),
