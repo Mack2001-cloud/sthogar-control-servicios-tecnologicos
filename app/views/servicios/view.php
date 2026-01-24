@@ -1,5 +1,10 @@
 <?php
 ob_start();
+$budgetAmount = (float) ($servicio['budget_amount'] ?? 0);
+$extrasAmount = (float) ($servicio['extras_amount'] ?? 0);
+$extrasDescription = $servicio['extras_description'] ?? '';
+$budgetExceeds = $budgetAmount > (float) ($servicio['estimated_amount'] ?? 0);
+$showBudgetSection = ($servicio['service_type'] ?? '') === 'instalacion';
 ?>
 <div class="row g-4">
     <div class="col-lg-8">
@@ -13,12 +18,55 @@ ob_start();
                 <div class="col-md-6"><strong>Programado:</strong> <?= e($servicio['scheduled_at'] ?? '-') ?></div>
                 <div class="col-md-6"><strong>Monto estimado:</strong> $<?= e(number_format((float) $servicio['estimated_amount'], 2)) ?></div>
                 <div class="col-md-6"><strong>Monto pagado:</strong> $<?= e(number_format((float) $servicio['amount'], 2)) ?></div>
+                <?php if ($showBudgetSection): ?>
+                    <div class="col-md-6"><strong>Presupuesto:</strong> $<?= e(number_format($budgetAmount, 2)) ?></div>
+                    <?php if ($budgetExceeds): ?>
+                        <div class="col-md-6"><strong>Extras:</strong> $<?= e(number_format($extrasAmount, 2)) ?></div>
+                    <?php endif; ?>
+                <?php endif; ?>
             </div>
             <div class="mt-3">
                 <strong>Descripción</strong>
                 <p class="mb-0"><?= e($servicio['description']) ?></p>
             </div>
+            <?php if ($showBudgetSection && $budgetExceeds && $extrasDescription): ?>
+                <div class="mt-3">
+                    <strong>Descripción de extras</strong>
+                    <p class="mb-0"><?= e($extrasDescription) ?></p>
+                </div>
+            <?php endif; ?>
         </div>
+
+        <?php if ($showBudgetSection): ?>
+            <div class="card p-4 mb-4">
+                <h6>Presupuesto de instalación</h6>
+                <form method="POST" action="/servicios/presupuesto" class="row g-3">
+                    <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
+                    <input type="hidden" name="servicio_id" value="<?= e((string) $servicio['id']) ?>">
+                    <div class="col-md-6">
+                        <label class="form-label">Presupuesto</label>
+                        <input type="number" step="0.01" name="budget_amount" class="form-control" value="<?= e(number_format($budgetAmount, 2, '.', '')) ?>">
+                    </div>
+                    <?php if ($budgetExceeds): ?>
+                        <div class="col-md-6">
+                            <label class="form-label">Extras</label>
+                            <input type="number" step="0.01" name="extras_amount" class="form-control" value="<?= e(number_format($extrasAmount, 2, '.', '')) ?>">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Descripción de extras</label>
+                            <textarea name="extras_description" class="form-control" rows="2"><?= e($extrasDescription) ?></textarea>
+                        </div>
+                    <?php else: ?>
+                        <div class="col-12">
+                            <p class="text-muted mb-0">El presupuesto no excede el monto estimado. Si se supera, aquí aparecerá el apartado de extras.</p>
+                        </div>
+                    <?php endif; ?>
+                    <div class="col-12 d-flex justify-content-end">
+                        <button class="btn btn-primary" type="submit">Guardar presupuesto</button>
+                    </div>
+                </form>
+            </div>
+        <?php endif; ?>
 
         <div class="card p-4 mb-4">
             <h6>Bitácora de servicio</h6>
