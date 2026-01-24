@@ -213,6 +213,37 @@ class ServiciosController
         exit;
     }
 
+    public function updateBudget(): void
+    {
+        verify_csrf();
+        $id = (int) ($_POST['servicio_id'] ?? 0);
+        $servicio = Servicio::find($id);
+        if (!$servicio) {
+            http_response_code(404);
+            echo view('partials/404');
+            return;
+        }
+
+        $budgetAmount = (float) ($_POST['budget_amount'] ?? 0);
+        $extrasAmount = (float) ($_POST['extras_amount'] ?? 0);
+        $extrasDescription = trim($_POST['extras_description'] ?? '');
+
+        if ($budgetAmount <= (float) ($servicio['estimated_amount'] ?? 0)) {
+            $extrasAmount = 0;
+            $extrasDescription = '';
+        }
+
+        Servicio::updateBudget($id, [
+            'budget_amount' => $budgetAmount,
+            'extras_amount' => $extrasAmount,
+            'extras_description' => $extrasDescription,
+        ]);
+
+        set_flash('success', 'Presupuesto actualizado.');
+        header('Location: /servicios/view?id=' . $id);
+        exit;
+    }
+
     public function delete(): void
     {
         verify_csrf();
