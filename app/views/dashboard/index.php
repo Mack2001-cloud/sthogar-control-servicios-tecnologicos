@@ -35,20 +35,6 @@ ob_start();
     <div class="col-lg-6">
         <div class="card h-100">
             <div class="card-body">
-                <h6 class="text-uppercase text-muted">Tema del panel</h6>
-                <button class="btn btn-outline-light" id="theme-toggle" type="button">
-                    Cambiar tema
-                </button>
-                <p class="text-muted small mt-2 mb-0">Alterna entre modo oscuro y claro.</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row g-4 mt-1">
-    <div class="col-lg-6">
-        <div class="card h-100">
-            <div class="card-body">
                 <h6 class="text-uppercase text-muted">Acciones rápidas</h6>
                 <div class="d-flex gap-2 flex-wrap">
                     <a class="btn btn-outline-light" href="/clientes/create">Nuevo cliente</a>
