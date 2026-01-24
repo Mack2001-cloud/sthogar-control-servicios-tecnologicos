@@ -151,8 +151,10 @@ class ServiciosController
         $totalPagos = Pago::totalByServicio($id);
         $documentacion = ServicioDocumentacion::findByServicio($id);
 
+        $isInstalacion = ($servicio['service_type'] ?? '') === 'instalacion';
+
         echo view('servicios/view', [
-            'title' => 'Detalle de servicio',
+            'title' => $isInstalacion ? 'Detalle de instalación' : 'Detalle de servicio',
             'servicio' => $servicio,
             'equipos' => $equipos,
             'logs' => $logs,
