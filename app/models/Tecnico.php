@@ -23,6 +23,22 @@ class Tecnico
         return $tecnico ?: null;
     }
 
+    public static function incomeSummary(): array
+    {
+        $pdo = Database::connection();
+        $stmt = $pdo->query(
+            'SELECT tecnicos.id, usuarios.nombre AS tecnico_name, COALESCE(SUM(pagos.monto), 0) AS total_income
+            FROM tecnicos
+            INNER JOIN usuarios ON tecnicos.usuario_id = usuarios.id
+            LEFT JOIN servicios ON servicios.tecnico_id = tecnicos.id
+            LEFT JOIN pagos ON pagos.servicio_id = servicios.id
+            GROUP BY tecnicos.id, usuarios.nombre
+            ORDER BY usuarios.nombre'
+        );
+
+        return $stmt->fetchAll();
+    }
+
     public static function create(array $data): int
     {
         $pdo = Database::connection();
