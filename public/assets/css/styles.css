@@ -132,6 +132,11 @@ body {
   border-left: 4px solid #3a86ff;
 }
 
+.chart-container {
+  position: relative;
+  min-height: 240px;
+}
+
 .table {
   margin-bottom: 0;
 }

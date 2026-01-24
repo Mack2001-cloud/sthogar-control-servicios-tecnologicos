@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\Cliente;
 use App\Models\Servicio;
 use App\Models\Equipo;
+use App\Models\Tecnico;
 
 class DashboardController
 {
@@ -19,6 +20,7 @@ class DashboardController
         echo view('dashboard/index', [
             'title' => 'Dashboard',
             'stats' => $stats,
+            'incomeByTechnician' => Tecnico::incomeSummary(),
         ]);
     }
 }
