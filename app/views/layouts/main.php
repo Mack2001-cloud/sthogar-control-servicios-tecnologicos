@@ -31,7 +31,9 @@ $user = auth_user();
             <p class="small text-uppercase text-muted mb-0">Control de servicios</p>
         </div>
         <ul class="nav flex-column">
-            <li class="nav-item"><a class="nav-link" href="/dashboard">Dashboard</a></li>
+            <?php if (is_admin()): ?>
+                <li class="nav-item"><a class="nav-link" href="/dashboard">Dashboard</a></li>
+            <?php endif; ?>
             <li class="nav-item"><a class="nav-link" href="/clientes">Clientes</a></li>
             <li class="nav-item"><a class="nav-link" href="/servicios">Servicios</a></li>
             <li class="nav-item"><a class="nav-link" href="/equipos">Equipos</a></li>

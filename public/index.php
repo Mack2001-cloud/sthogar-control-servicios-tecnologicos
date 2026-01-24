@@ -57,7 +57,7 @@ $generalMiddleware = ['auth_middleware', role_required_any(['admin', 'tecnico'])
 
 $router->add('GET', '/', function (): void {
     if (isset($_SESSION['user_id'])) {
-        header('Location: ' . AUTH_POST_LOGIN_ROUTE);
+        header('Location: ' . post_login_route());
         exit;
     }
     header('Location: ' . AUTH_LOGIN_ROUTE);
@@ -68,7 +68,7 @@ $router->add('GET', AUTH_LOGIN_ROUTE, [$authController, 'loginForm']);
 $router->add('POST', AUTH_LOGIN_POST_ROUTE, [$authController, 'loginPost']);
 $router->add('GET', AUTH_LOGOUT_ROUTE, [$authController, 'logout']);
 
-$router->add('GET', '/dashboard', [$dashboardController, 'index'], $generalMiddleware);
+$router->add('GET', '/dashboard', [$dashboardController, 'index'], $adminMiddleware);
 
 $router->add('GET', '/clientes', [$clientesController, 'index'], $generalMiddleware);
 $router->add('GET', '/clientes/create', [$clientesController, 'createForm'], $generalMiddleware);

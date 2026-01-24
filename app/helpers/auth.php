@@ -54,3 +54,8 @@ function require_role(string $role): void
         exit;
     }
 }
+
+function post_login_route(): string
+{
+    return is_admin() ? '/dashboard' : '/servicios';
+}

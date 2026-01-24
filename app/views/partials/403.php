@@ -1,3 +1,4 @@
+<?php $home = post_login_route(); ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -11,7 +12,7 @@
 <div class="container py-5 text-center">
     <h1 class="display-5">403</h1>
     <p class="text-muted">No tienes permisos para esta acción.</p>
-    <a class="btn btn-primary" href="/dashboard">Volver</a>
+    <a class="btn btn-primary" href="<?= e($home) ?>">Volver</a>
 </div>
 </body>
 </html>
