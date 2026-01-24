@@ -9,7 +9,7 @@ class Cliente
     public static function all(?string $search = null): array
     {
         $pdo = Database::connection();
-        $sql = 'SELECT clientes.id, clientes.nombre AS name, clientes.email, clientes.telefono AS phone, clientes.direccion AS address, clientes.referencia AS notes, clientes.tecnico_id, usuarios.nombre AS tecnico_name, clientes.creado_en AS created_at FROM clientes LEFT JOIN tecnicos ON clientes.tecnico_id = tecnicos.id LEFT JOIN usuarios ON tecnicos.usuario_id = usuarios.id';
+        $sql = 'SELECT clientes.id, clientes.nombre AS name, clientes.email, clientes.telefono AS phone, clientes.direccion AS address, clientes.referencia AS notes, clientes.tecnico_id, usuarios.nombre AS tecnico_name, clientes.creado_en AS created_at, COALESCE(SUM(pagos.monto), 0) AS total_income FROM clientes LEFT JOIN tecnicos ON clientes.tecnico_id = tecnicos.id LEFT JOIN usuarios ON tecnicos.usuario_id = usuarios.id LEFT JOIN servicios ON servicios.cliente_id = clientes.id LEFT JOIN pagos ON pagos.servicio_id = servicios.id';
         $params = [];
 
         if ($search) {
@@ -17,7 +17,7 @@ class Cliente
             $params['term'] = '%' . $search . '%';
         }
 
-        $sql .= ' ORDER BY clientes.creado_en DESC';
+        $sql .= ' GROUP BY clientes.id ORDER BY clientes.creado_en DESC';
         $stmt = $pdo->prepare($sql);
         $stmt->execute($params);
         return $stmt->fetchAll();
@@ -26,7 +26,7 @@ class Cliente
     public static function find(int $id): ?array
     {
         $pdo = Database::connection();
-        $stmt = $pdo->prepare('SELECT clientes.id, clientes.nombre AS name, clientes.email, clientes.telefono AS phone, clientes.direccion AS address, clientes.referencia AS notes, clientes.tecnico_id, usuarios.nombre AS tecnico_name, clientes.creado_en AS created_at FROM clientes LEFT JOIN tecnicos ON clientes.tecnico_id = tecnicos.id LEFT JOIN usuarios ON tecnicos.usuario_id = usuarios.id WHERE clientes.id = :id');
+        $stmt = $pdo->prepare('SELECT clientes.id, clientes.nombre AS name, clientes.email, clientes.telefono AS phone, clientes.direccion AS address, clientes.referencia AS notes, clientes.tecnico_id, usuarios.nombre AS tecnico_name, clientes.creado_en AS created_at, COALESCE(SUM(pagos.monto), 0) AS total_income FROM clientes LEFT JOIN tecnicos ON clientes.tecnico_id = tecnicos.id LEFT JOIN usuarios ON tecnicos.usuario_id = usuarios.id LEFT JOIN servicios ON servicios.cliente_id = clientes.id LEFT JOIN pagos ON pagos.servicio_id = servicios.id WHERE clientes.id = :id GROUP BY clientes.id');
         $stmt->execute(['id' => $id]);
         $cliente = $stmt->fetch();
         return $cliente ?: null;
