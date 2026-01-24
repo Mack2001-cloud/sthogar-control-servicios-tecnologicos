@@ -175,6 +175,7 @@ CREATE TABLE adjuntos (
 
 INSERT INTO usuarios (nombre, email, pass_hash, rol, activo) VALUES
   ('Admin Sthogar', 'admin@sthogar.test', '$2y$12$BFgP/4jqzs9a/4NHcWFDh.FnsHtW7rkXPRd8DMG1RvSLkfYp/UawO', 'admin', 1),
+  ('Ventas Sthogar', 'ventas@sthogar.test', '$2y$12$tJdvmaZfiPNQNwLKnMs1puhiVgN1EL3E2DcOGLdjnYIht4C29CXUS', 'ventas', 1),
   ('Carlos Rivera', 'carlos.rivera@sthogar.test', '$2y$12$qq1sxyZ4sTfLLYWXCyamZOqeIHsMfh4MIRj.AYOSbS3mxaWBKERPK', 'tecnico', 1),
   ('Lucia Morales', 'lucia.morales@sthogar.test', '$2y$12$qq1sxyZ4sTfLLYWXCyamZOqeIHsMfh4MIRj.AYOSbS3mxaWBKERPK', 'tecnico', 1);
 

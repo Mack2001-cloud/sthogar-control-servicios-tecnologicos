@@ -37,4 +37,5 @@ README.md
 
 ## Usuarios de prueba
 - Admin: `admin@sthogar.test` / `Admin123*`
+- Ventas: `ventas@sthogar.test` / `Ventas123*`
 - Técnico: `tecnico@sthogar.test` / `Tecnico123*`
