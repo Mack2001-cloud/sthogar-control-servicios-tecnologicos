@@ -21,6 +21,7 @@ ob_start();
                 <th>Email</th>
                 <th>Teléfono</th>
                 <th>Dirección</th>
+                <th>Ingresos</th>
                 <th>Técnico asignado</th>
                 <th>Acciones</th>
             </tr>
@@ -32,6 +33,7 @@ ob_start();
                     <td><?= e($cliente['email']) ?></td>
                     <td><?= e($cliente['phone']) ?></td>
                     <td><?= e($cliente['address']) ?></td>
+                    <td>$<?= e(number_format((float) ($cliente['total_income'] ?? 0), 2)) ?></td>
                     <td><?= e($cliente['tecnico_name'] ?? 'Sin asignar') ?></td>
                     <td>
                         <div class="d-flex gap-2">
@@ -49,7 +51,7 @@ ob_start();
             <?php endforeach; ?>
             <?php if (!$clientes): ?>
                 <tr>
-                    <td colspan="6" class="text-center text-muted">Sin clientes registrados.</td>
+                    <td colspan="7" class="text-center text-muted">Sin clientes registrados.</td>
                 </tr>
             <?php endif; ?>
             </tbody>
