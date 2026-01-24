@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\Cliente;
 use App\Models\Tecnico;
+use PDOException;
 
 class ClientesController
 {
@@ -108,8 +109,43 @@ class ClientesController
         verify_csrf();
 
         $id = (int) ($_POST['id'] ?? 0);
-        Cliente::delete($id);
-        set_flash('success', 'Cliente eliminado.');
+        $cliente = Cliente::find($id);
+        if (!$cliente) {
+            http_response_code(404);
+            echo view('partials/404');
+            return;
+        }
+
+        $counts = Cliente::dependencyCounts($id);
+        $servicios = (int) ($counts['servicios'] ?? 0);
+        $equipos = (int) ($counts['equipos'] ?? 0);
+
+        if ($servicios > 0 || $equipos > 0) {
+            $detalles = [];
+            if ($servicios > 0) {
+                $detalles[] = $servicios . ' servicio(s)';
+            }
+            if ($equipos > 0) {
+                $detalles[] = $equipos . ' equipo(s)';
+            }
+            set_flash(
+                'danger',
+                'No se puede eliminar el cliente porque tiene ' . implode(' y ', $detalles) . ' asociados. Elimina esos registros primero.'
+            );
+            header('Location: /clientes');
+            exit;
+        }
+
+        try {
+            Cliente::delete($id);
+            set_flash('success', 'Cliente eliminado.');
+        } catch (PDOException $exception) {
+            if ($exception->getCode() === '23000') {
+                set_flash('danger', 'No se puede eliminar el cliente porque tiene registros asociados.');
+            } else {
+                throw $exception;
+            }
+        }
         header('Location: /clientes');
         exit;
     }
