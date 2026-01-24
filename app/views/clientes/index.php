@@ -39,6 +39,7 @@ ob_start();
                     <td><?= e($cliente['tecnico_name'] ?? 'Sin asignar') ?></td>
                     <td>
                         <div class="d-flex gap-2">
+                            <a class="btn btn-sm btn-outline-light" href="/clientes/view?id=<?= e((string) $cliente['id']) ?>">Ver</a>
                             <a class="btn btn-sm btn-outline-light" href="/clientes/edit?id=<?= e((string) $cliente['id']) ?>">Editar</a>
                             <?php if (is_admin()): ?>
                                 <form method="POST" action="/clientes/delete" onsubmit="return confirm('¿Eliminar cliente?');">
