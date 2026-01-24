@@ -76,6 +76,7 @@ $router->add('GET', '/dashboard', [$dashboardController, 'index'], $adminMiddlew
 $router->add('GET', '/clientes', [$clientesController, 'index'], $generalMiddleware);
 $router->add('GET', '/clientes/create', [$clientesController, 'createForm'], $generalMiddleware);
 $router->add('POST', '/clientes/create', [$clientesController, 'create'], $generalMiddleware);
+$router->add('GET', '/clientes/view', [$clientesController, 'view'], $generalMiddleware);
 $router->add('GET', '/clientes/edit', [$clientesController, 'editForm'], $generalMiddleware);
 $router->add('POST', '/clientes/edit', [$clientesController, 'update'], $generalMiddleware);
 $router->add('POST', '/clientes/delete', [$clientesController, 'delete'], $generalMiddleware);

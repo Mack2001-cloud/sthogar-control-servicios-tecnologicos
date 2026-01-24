@@ -57,6 +57,25 @@ class ClientesController
         exit;
     }
 
+    public function view(): void
+    {
+        $id = (int) ($_GET['id'] ?? 0);
+        $cliente = Cliente::find($id);
+        if (!$cliente) {
+            http_response_code(404);
+            echo view('partials/404');
+            return;
+        }
+
+        $counts = Cliente::serviceCounts($id);
+
+        echo view('clientes/view', [
+            'title' => 'Detalle de cliente',
+            'cliente' => $cliente,
+            'counts' => $counts,
+        ]);
+    }
+
     public function editForm(): void
     {
         $id = (int) ($_GET['id'] ?? 0);

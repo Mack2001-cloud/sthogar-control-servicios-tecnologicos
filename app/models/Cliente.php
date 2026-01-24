@@ -79,6 +79,21 @@ class Cliente
         return $stmt->fetch() ?: ['servicios' => 0, 'equipos' => 0];
     }
 
+    public static function serviceCounts(int $id): array
+    {
+        $pdo = Database::connection();
+        $stmt = $pdo->prepare('SELECT
+            COUNT(*) AS total_servicios,
+            SUM(CASE WHEN servicios.tipo = :instalacion THEN 1 ELSE 0 END) AS instalaciones
+            FROM servicios
+            WHERE servicios.cliente_id = :id');
+        $stmt->execute([
+            'id' => $id,
+            'instalacion' => 'instalacion',
+        ]);
+        return $stmt->fetch() ?: ['total_servicios' => 0, 'instalaciones' => 0];
+    }
+
     public static function countAll(): int
     {
         $pdo = Database::connection();
