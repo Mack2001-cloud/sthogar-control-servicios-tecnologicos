@@ -98,7 +98,7 @@ class EquiposController
     public function delete(): void
     {
         verify_csrf();
-        if (!is_admin()) {
+        if (!is_admin_only()) {
             require_role('admin');
         }
 

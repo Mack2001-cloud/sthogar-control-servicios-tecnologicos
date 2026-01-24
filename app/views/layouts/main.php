@@ -38,7 +38,7 @@ $user = auth_user();
             <li class="nav-item"><a class="nav-link" href="/servicios">Servicios</a></li>
             <li class="nav-item"><a class="nav-link" href="/instalaciones">Instalaciones</a></li>
             <li class="nav-item"><a class="nav-link" href="/equipos">Equipos</a></li>
-            <?php if (is_admin()): ?>
+            <?php if (is_admin_only()): ?>
                 <li class="nav-item"><a class="nav-link" href="/admin/tecnicos">Técnicos</a></li>
             <?php endif; ?>
             <?php if (is_admin()): ?>
