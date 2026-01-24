@@ -62,6 +62,7 @@ CREATE TABLE servicios (
   presupuesto DECIMAL(10,2) NOT NULL DEFAULT 0.00,
   extras_monto DECIMAL(10,2) NOT NULL DEFAULT 0.00,
   extras_descripcion TEXT DEFAULT NULL,
+  equipos_materiales TEXT DEFAULT NULL,
   creado_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   actualizado_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   INDEX idx_servicios_folio (folio),

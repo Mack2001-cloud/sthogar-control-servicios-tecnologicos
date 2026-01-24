@@ -70,6 +70,9 @@ class Servicio
         $extrasDescriptionSql = self::hasColumn('extras_descripcion')
             ? 'servicios.extras_descripcion AS extras_description'
             : "'' AS extras_description";
+        $equipmentMaterialsSql = self::hasColumn('equipos_materiales')
+            ? 'servicios.equipos_materiales AS equipment_materials'
+            : "'' AS equipment_materials";
         $sql = 'SELECT servicios.id,
             servicios.folio,
             servicios.cliente_id,
@@ -84,6 +87,7 @@ class Servicio
             ' . $budgetAmountSql . ',
             ' . $extrasAmountSql . ',
             ' . $extrasDescriptionSql . ',
+            ' . $equipmentMaterialsSql . ',
             servicios.creado_en AS created_at,
             servicios.actualizado_en AS updated_at,
             COALESCE(SUM(pagos.monto), 0) AS amount,
@@ -133,6 +137,9 @@ class Servicio
         $extrasDescriptionSql = self::hasColumn('extras_descripcion')
             ? 'servicios.extras_descripcion AS extras_description'
             : "'' AS extras_description";
+        $equipmentMaterialsSql = self::hasColumn('equipos_materiales')
+            ? 'servicios.equipos_materiales AS equipment_materials'
+            : "'' AS equipment_materials";
         $stmt = $pdo->prepare('SELECT servicios.id,
             servicios.folio,
             servicios.cliente_id,
@@ -147,6 +154,7 @@ class Servicio
             ' . $budgetAmountSql . ',
             ' . $extrasAmountSql . ',
             ' . $extrasDescriptionSql . ',
+            ' . $equipmentMaterialsSql . ',
             servicios.creado_en AS created_at,
             servicios.actualizado_en AS updated_at,
             COALESCE(SUM(pagos.monto), 0) AS amount,
@@ -214,6 +222,11 @@ class Servicio
             $values['extras_description'] = $data['extras_description'] ?? '';
         }
 
+        if (self::hasColumn('equipos_materiales')) {
+            $columns[] = 'equipos_materiales';
+            $values['equipment_materials'] = $data['equipment_materials'] ?? '';
+        }
+
         $placeholders = array_map(static fn (string $column): string => ':' . self::columnPlaceholder($column), $columns);
         $stmt = $pdo->prepare('INSERT INTO servicios (' . implode(', ', $columns) . ') VALUES (' . implode(', ', $placeholders) . ')');
         $stmt->execute(self::mapColumnValues($columns, $values));
@@ -250,6 +263,10 @@ class Servicio
 
         if (self::hasColumn('extras_descripcion')) {
             $fields['extras_descripcion'] = $data['extras_description'] ?? '';
+        }
+
+        if (self::hasColumn('equipos_materiales')) {
+            $fields['equipos_materiales'] = $data['equipment_materials'] ?? '';
         }
 
         $setParts = [];
@@ -327,6 +344,7 @@ class Servicio
             'presupuesto' => 'budget_amount',
             'extras_monto' => 'extras_amount',
             'extras_descripcion' => 'extras_description',
+            'equipos_materiales' => 'equipment_materials',
             default => $column,
         };
     }

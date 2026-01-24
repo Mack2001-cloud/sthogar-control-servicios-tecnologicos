@@ -3,6 +3,7 @@ ob_start();
 $budgetAmount = (float) ($servicio['budget_amount'] ?? 0);
 $extrasAmount = (float) ($servicio['extras_amount'] ?? 0);
 $extrasDescription = $servicio['extras_description'] ?? '';
+$equipmentMaterials = $servicio['equipment_materials'] ?? '';
 $budgetExceeds = $budgetAmount > (float) ($servicio['estimated_amount'] ?? 0);
 $showBudgetSection = ($servicio['service_type'] ?? '') === 'instalacion';
 $documentacion = $documentacion ?? [];
@@ -41,6 +42,12 @@ $documentacionTotal = $documentacion['total'] ?? '';
                     <?php endif; ?>
                 <?php endif; ?>
             </div>
+            <?php if ($equipmentMaterials): ?>
+                <div class="mt-3">
+                    <strong>Equipos y material a utilizar</strong>
+                    <p class="mb-0"><?= e($equipmentMaterials) ?></p>
+                </div>
+            <?php endif; ?>
             <div class="mt-3">
                 <strong>Descripción</strong>
                 <p class="mb-0"><?= e($servicio['description']) ?></p>

@@ -5,6 +5,7 @@ $servicio = array_merge([
     'type' => '',
     'service_type' => 'soporte',
     'description' => '',
+    'equipment_materials' => '',
     'status' => 'pendiente',
     'scheduled_at' => '',
     'estimated_amount' => 0,
@@ -73,6 +74,10 @@ $servicio = array_merge([
         <div class="col-md-6">
             <label class="form-label">Monto estimado</label>
             <input type="number" step="0.01" name="amount" class="form-control" value="<?= e((string) $servicio['estimated_amount']) ?>">
+        </div>
+        <div class="col-12">
+            <label class="form-label">Equipos y material a utilizar</label>
+            <textarea name="equipment_materials" class="form-control" rows="3" placeholder="Ej. 2 cámaras, 1 DVR, 30m de cable, conectores"><?= e($servicio['equipment_materials']) ?></textarea>
         </div>
         <div class="col-12">
             <label class="form-label">Descripción</label>
