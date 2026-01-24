@@ -53,6 +53,9 @@ $user = auth_user();
             </div>
             <div class="d-flex align-items-center gap-3">
                 <span class="text-muted small">Hola, <?= e($user['name'] ?? 'Usuario') ?></span>
+                <button class="btn btn-outline-light btn-sm" id="theme-toggle" type="button">
+                    Cambiar tema
+                </button>
                 <a class="btn btn-outline-light btn-sm" href="/auth/logout">Salir</a>
             </div>
         </div>
