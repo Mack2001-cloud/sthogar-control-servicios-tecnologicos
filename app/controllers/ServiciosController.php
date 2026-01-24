@@ -152,9 +152,11 @@ class ServiciosController
         $documentacion = ServicioDocumentacion::findByServicio($id);
 
         $isInstalacion = ($servicio['service_type'] ?? '') === 'instalacion';
+        $view = $isInstalacion ? 'servicios/instalacion_view' : 'servicios/view';
+        $title = $isInstalacion ? 'Detalle de instalación' : 'Detalles de servicio';
 
-        echo view('servicios/view', [
-            'title' => $isInstalacion ? 'Detalle de instalación' : 'Detalle de servicio',
+        echo view($view, [
+            'title' => $title,
             'servicio' => $servicio,
             'equipos' => $equipos,
             'logs' => $logs,
