@@ -1,15 +1,16 @@
 <?php
 ob_start();
-$servicio = $servicio ?? [
+$servicio = array_merge([
     'cliente_id' => '',
     'type' => '',
+    'service_type' => 'soporte',
     'description' => '',
     'status' => 'pendiente',
     'scheduled_at' => '',
     'amount' => 0,
     'tecnico_id' => null,
     'tecnico_name' => '',
-];
+], $servicio ?? []);
 ?>
 <form method="POST" action="<?= e($action) ?>" class="card p-4">
     <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
@@ -30,6 +31,14 @@ $servicio = $servicio ?? [
             <select name="type" class="form-select" required>
                 <?php foreach (['CCTV', 'Automatización', 'Red', 'Soporte', 'POS', 'Ventas'] as $type): ?>
                     <option value="<?= e($type) ?>" <?= $servicio['type'] === $type ? 'selected' : '' ?>><?= e($type) ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Tipo de atención</label>
+            <select name="service_type" class="form-select" required>
+                <?php foreach (['instalacion' => 'Instalación', 'mantenimiento' => 'Mantenimiento', 'soporte' => 'Soporte', 'venta' => 'Venta'] as $value => $label): ?>
+                    <option value="<?= e($value) ?>" <?= (string) ($servicio['service_type'] ?? '') === (string) $value ? 'selected' : '' ?>><?= e($label) ?></option>
                 <?php endforeach; ?>
             </select>
         </div>

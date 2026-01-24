@@ -78,6 +78,7 @@ $router->add('POST', '/clientes/edit', [$clientesController, 'update'], $general
 $router->add('POST', '/clientes/delete', [$clientesController, 'delete'], $generalMiddleware);
 
 $router->add('GET', '/servicios', [$serviciosController, 'index'], $generalMiddleware);
+$router->add('GET', '/instalaciones', [$serviciosController, 'instalaciones'], $generalMiddleware);
 $router->add('GET', '/servicios/create', [$serviciosController, 'createForm'], $generalMiddleware);
 $router->add('POST', '/servicios/create', [$serviciosController, 'create'], $generalMiddleware);
 $router->add('GET', '/servicios/view', [$serviciosController, 'view'], $generalMiddleware);
