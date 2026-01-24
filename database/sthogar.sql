@@ -58,6 +58,7 @@ CREATE TABLE servicios (
   prioridad ENUM('baja','media','alta') NOT NULL,
   estatus ENUM('pendiente','proceso','finalizado','cancelado') NOT NULL,
   fecha_programada DATE DEFAULT NULL,
+  monto_estimado DECIMAL(10,2) NOT NULL DEFAULT 0.00,
   creado_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   actualizado_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   INDEX idx_servicios_folio (folio),

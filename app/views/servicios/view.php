@@ -11,7 +11,8 @@ ob_start();
                 <div class="col-md-6"><strong>Técnico:</strong> <?= e($servicio['tecnico_name'] ?? 'Sin asignar') ?></div>
                 <div class="col-md-6"><strong>Estado:</strong> <?= e($statusOptions[$servicio['status']] ?? $servicio['status']) ?></div>
                 <div class="col-md-6"><strong>Programado:</strong> <?= e($servicio['scheduled_at'] ?? '-') ?></div>
-                <div class="col-md-6"><strong>Monto:</strong> $<?= e(number_format((float) $servicio['amount'], 2)) ?></div>
+                <div class="col-md-6"><strong>Monto estimado:</strong> $<?= e(number_format((float) $servicio['estimated_amount'], 2)) ?></div>
+                <div class="col-md-6"><strong>Monto pagado:</strong> $<?= e(number_format((float) $servicio['amount'], 2)) ?></div>
             </div>
             <div class="mt-3">
                 <strong>Descripción</strong>

@@ -50,6 +50,7 @@ class Servicio
             servicios.prioridad,
             servicios.estatus AS status,
             servicios.fecha_programada AS scheduled_at,
+            servicios.monto_estimado AS estimated_amount,
             servicios.creado_en AS created_at,
             servicios.actualizado_en AS updated_at,
             COALESCE(SUM(pagos.monto), 0) AS amount,
@@ -97,6 +98,7 @@ class Servicio
             servicios.prioridad,
             servicios.estatus AS status,
             servicios.fecha_programada AS scheduled_at,
+            servicios.monto_estimado AS estimated_amount,
             servicios.creado_en AS created_at,
             servicios.actualizado_en AS updated_at,
             COALESCE(SUM(pagos.monto), 0) AS amount,
@@ -121,7 +123,7 @@ class Servicio
         $folio = $data['folio'] ?? ('SRV-' . date('YmdHis') . '-' . random_int(100, 999));
         $categoria = self::normalizeCategoria($data['categoria'] ?? $data['type'] ?? '');
         $tipo = self::normalizeTipo($data['tipo'] ?? $data['service_type'] ?? null);
-        $stmt = $pdo->prepare('INSERT INTO servicios (folio, cliente_id, categoria, tipo, descripcion, prioridad, estatus, fecha_programada, tecnico_id) VALUES (:folio, :cliente_id, :categoria, :type, :description, :priority, :status, :scheduled_at, :tecnico_id)');
+        $stmt = $pdo->prepare('INSERT INTO servicios (folio, cliente_id, categoria, tipo, descripcion, prioridad, estatus, fecha_programada, monto_estimado, tecnico_id) VALUES (:folio, :cliente_id, :categoria, :type, :description, :priority, :status, :scheduled_at, :estimated_amount, :tecnico_id)');
         $stmt->execute([
             'folio' => $folio,
             'cliente_id' => $data['cliente_id'],
@@ -131,6 +133,7 @@ class Servicio
             'priority' => $data['priority'] ?? 'media',
             'status' => $data['status'],
             'scheduled_at' => $data['scheduled_at'],
+            'estimated_amount' => $data['estimated_amount'] ?? 0,
             'tecnico_id' => $data['tecnico_id'] ?? null,
         ]);
         return (int) $pdo->lastInsertId();
@@ -141,7 +144,7 @@ class Servicio
         $pdo = Database::connection();
         $categoria = self::normalizeCategoria($data['categoria'] ?? $data['type'] ?? '');
         $tipo = self::normalizeTipo($data['tipo'] ?? $data['service_type'] ?? null);
-        $stmt = $pdo->prepare('UPDATE servicios SET cliente_id = :cliente_id, categoria = :categoria, tipo = :type, descripcion = :description, prioridad = :priority, estatus = :status, fecha_programada = :scheduled_at, tecnico_id = :tecnico_id WHERE id = :id');
+        $stmt = $pdo->prepare('UPDATE servicios SET cliente_id = :cliente_id, categoria = :categoria, tipo = :type, descripcion = :description, prioridad = :priority, estatus = :status, fecha_programada = :scheduled_at, monto_estimado = :estimated_amount, tecnico_id = :tecnico_id WHERE id = :id');
         $stmt->execute([
             'id' => $id,
             'cliente_id' => $data['cliente_id'],
@@ -151,6 +154,7 @@ class Servicio
             'priority' => $data['priority'] ?? 'media',
             'status' => $data['status'],
             'scheduled_at' => $data['scheduled_at'],
+            'estimated_amount' => $data['estimated_amount'] ?? 0,
             'tecnico_id' => $data['tecnico_id'] ?? null,
         ]);
     }
