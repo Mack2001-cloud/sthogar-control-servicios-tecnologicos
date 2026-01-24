@@ -35,6 +35,11 @@ function current_user_role(): string
 
 function is_admin(): bool
 {
+    return in_array(current_user_role(), ['admin', 'ventas'], true);
+}
+
+function is_admin_only(): bool
+{
     return current_user_role() === 'admin';
 }
 

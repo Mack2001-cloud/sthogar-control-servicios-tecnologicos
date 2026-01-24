@@ -9,7 +9,7 @@ CREATE TABLE usuarios (
   nombre VARCHAR(120) NOT NULL,
   email VARCHAR(150) NOT NULL UNIQUE,
   pass_hash VARCHAR(255) NOT NULL,
-  rol ENUM('admin','tecnico') NOT NULL,
+  rol ENUM('admin','tecnico','ventas') NOT NULL,
   activo TINYINT(1) NOT NULL DEFAULT 1,
   creado_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;

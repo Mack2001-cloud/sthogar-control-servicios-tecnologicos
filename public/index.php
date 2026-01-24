@@ -52,8 +52,9 @@ $adjuntosController = new AdjuntosController();
 $exportController = new ExportController();
 $adminTecnicosController = new AdminTecnicosController();
 
-$adminMiddleware = ['auth_middleware', role_required('admin')];
-$generalMiddleware = ['auth_middleware', role_required_any(['admin', 'tecnico'])];
+$adminMiddleware = ['auth_middleware', role_required_any(['admin', 'ventas'])];
+$adminOnlyMiddleware = ['auth_middleware', role_required('admin')];
+$generalMiddleware = ['auth_middleware', role_required_any(['admin', 'ventas', 'tecnico'])];
 
 $router->add('GET', '/', function (): void {
     if (isset($_SESSION['user_id'])) {
@@ -102,12 +103,12 @@ $router->add('POST', '/adjuntos/upload', [$adjuntosController, 'upload'], $gener
 $router->add('GET', '/export/clientes.csv', [$exportController, 'clientes'], $adminMiddleware);
 $router->add('GET', '/export/servicios.csv', [$exportController, 'servicios'], $adminMiddleware);
 
-$router->add('GET', '/admin/tecnicos', [$adminTecnicosController, 'index'], $adminMiddleware);
-$router->add('GET', '/admin/tecnicos/create', [$adminTecnicosController, 'createForm'], $adminMiddleware);
-$router->add('POST', '/admin/tecnicos/create', [$adminTecnicosController, 'create'], $adminMiddleware);
-$router->add('GET', '/admin/tecnicos/edit', [$adminTecnicosController, 'editForm'], $adminMiddleware);
-$router->add('POST', '/admin/tecnicos/edit', [$adminTecnicosController, 'update'], $adminMiddleware);
-$router->add('POST', '/admin/tecnicos/toggle', [$adminTecnicosController, 'toggle'], $adminMiddleware);
-$router->add('POST', '/admin/tecnicos/delete', [$adminTecnicosController, 'delete'], $adminMiddleware);
+$router->add('GET', '/admin/tecnicos', [$adminTecnicosController, 'index'], $adminOnlyMiddleware);
+$router->add('GET', '/admin/tecnicos/create', [$adminTecnicosController, 'createForm'], $adminOnlyMiddleware);
+$router->add('POST', '/admin/tecnicos/create', [$adminTecnicosController, 'create'], $adminOnlyMiddleware);
+$router->add('GET', '/admin/tecnicos/edit', [$adminTecnicosController, 'editForm'], $adminOnlyMiddleware);
+$router->add('POST', '/admin/tecnicos/edit', [$adminTecnicosController, 'update'], $adminOnlyMiddleware);
+$router->add('POST', '/admin/tecnicos/toggle', [$adminTecnicosController, 'toggle'], $adminOnlyMiddleware);
+$router->add('POST', '/admin/tecnicos/delete', [$adminTecnicosController, 'delete'], $adminOnlyMiddleware);
 
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
