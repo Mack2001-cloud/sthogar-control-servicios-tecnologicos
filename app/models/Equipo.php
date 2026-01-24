@@ -13,6 +13,7 @@ class Equipo
             equipos.cliente_id,
             equipos.servicio_id,
             equipos.categoria_equipo AS name,
+            equipos.modelo AS model,
             equipos.serie AS serial_number,
             equipos.ubicacion AS location,
             equipos.notas AS notes,
@@ -27,7 +28,7 @@ class Equipo
     public static function find(int $id): ?array
     {
         $pdo = Database::connection();
-        $stmt = $pdo->prepare('SELECT id, cliente_id, servicio_id, categoria_equipo AS name, serie AS serial_number, ubicacion AS location, notas AS notes, creado_en AS created_at FROM equipos WHERE id = :id');
+        $stmt = $pdo->prepare('SELECT id, cliente_id, servicio_id, categoria_equipo AS name, modelo AS model, serie AS serial_number, ubicacion AS location, notas AS notes, creado_en AS created_at FROM equipos WHERE id = :id');
         $stmt->execute(['id' => $id]);
         $equipo = $stmt->fetch();
         return $equipo ?: null;
@@ -83,7 +84,7 @@ class Equipo
     public static function byCliente(int $clienteId): array
     {
         $pdo = Database::connection();
-        $stmt = $pdo->prepare('SELECT id, cliente_id, servicio_id, categoria_equipo AS name, serie AS serial_number, ubicacion AS location, notas AS notes, creado_en AS created_at FROM equipos WHERE cliente_id = :cliente_id ORDER BY creado_en DESC');
+        $stmt = $pdo->prepare('SELECT id, cliente_id, servicio_id, categoria_equipo AS name, modelo AS model, serie AS serial_number, ubicacion AS location, notas AS notes, creado_en AS created_at FROM equipos WHERE cliente_id = :cliente_id ORDER BY creado_en DESC');
         $stmt->execute(['cliente_id' => $clienteId]);
         return $stmt->fetchAll();
     }
