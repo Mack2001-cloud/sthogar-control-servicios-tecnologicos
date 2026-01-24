@@ -15,12 +15,8 @@ $documentacionItems = array_pad($documentacionItems, 8, [
     'unit_price' => '',
     'amount' => '',
 ]);
-$documentacionCliente = $documentacion['cliente'] ?? ($servicio['cliente_name'] ?? '');
-$documentacionDireccion = $documentacion['direccion'] ?? '';
 $documentacionFecha = $documentacion['fecha'] ?? ($servicio['scheduled_at'] ?? '');
-$documentacionObservaciones = $documentacion['observaciones'] ?? '';
 $documentacionResponsable = $documentacion['responsable_venta'] ?? ($servicio['tecnico_name'] ?? '');
-$documentacionClienteFirma = $documentacion['cliente_firma'] ?? '';
 $documentacionTotal = $documentacion['total'] ?? '';
 ?>
 <div class="row g-4">
@@ -98,16 +94,8 @@ $documentacionTotal = $documentacion['total'] ?? '';
                 <input type="hidden" name="servicio_id" value="<?= e((string) $servicio['id']) ?>">
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <label class="form-label">Cliente</label>
-                        <input type="text" name="document_cliente" class="form-control" value="<?= e($documentacionCliente) ?>">
-                    </div>
-                    <div class="col-md-6">
                         <label class="form-label">Fecha</label>
                         <input type="date" name="document_date" class="form-control" value="<?= e($documentacionFecha) ?>">
-                    </div>
-                    <div class="col-12">
-                        <label class="form-label">Dirección</label>
-                        <input type="text" name="document_direccion" class="form-control" value="<?= e($documentacionDireccion) ?>">
                     </div>
                 </div>
 
@@ -156,19 +144,10 @@ $documentacionTotal = $documentacion['total'] ?? '';
                     </div>
                 </div>
 
-                <div class="mt-3">
-                    <label class="form-label">Observaciones</label>
-                    <textarea name="document_observaciones" class="form-control" rows="4"><?= e($documentacionObservaciones) ?></textarea>
-                </div>
-
                 <div class="row g-3 mt-3">
                     <div class="col-md-6">
                         <label class="form-label">Responsable venta</label>
                         <input type="text" name="document_responsable" class="form-control" value="<?= e($documentacionResponsable) ?>">
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Cliente</label>
-                        <input type="text" name="document_cliente_firma" class="form-control" value="<?= e($documentacionClienteFirma) ?>">
                     </div>
                 </div>
 

@@ -312,13 +312,9 @@ class ServiciosController
         }
 
         ServicioDocumentacion::upsertByServicio($id, [
-            'cliente' => trim((string) ($_POST['document_cliente'] ?? '')),
-            'direccion' => trim((string) ($_POST['document_direccion'] ?? '')),
             'fecha' => $_POST['document_date'] ?? null,
             'items' => $items,
-            'observaciones' => trim((string) ($_POST['document_observaciones'] ?? '')),
             'responsable_venta' => trim((string) ($_POST['document_responsable'] ?? '')),
-            'cliente_firma' => trim((string) ($_POST['document_cliente_firma'] ?? '')),
             'total' => (float) ($_POST['document_total'] ?? 0),
         ]);
 
