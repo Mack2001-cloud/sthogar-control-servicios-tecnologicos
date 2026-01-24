@@ -6,6 +6,24 @@ use App\Core\Database;
 
 class Servicio
 {
+    private static ?bool $hasMontoEstimado = null;
+
+    private static function hasMontoEstimadoColumn(): bool
+    {
+        if (self::$hasMontoEstimado !== null) {
+            return self::$hasMontoEstimado;
+        }
+
+        $pdo = Database::connection();
+        $stmt = $pdo->prepare('SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = :table AND column_name = :column');
+        $stmt->execute([
+            'table' => 'servicios',
+            'column' => 'monto_estimado',
+        ]);
+        self::$hasMontoEstimado = ((int) $stmt->fetchColumn()) > 0;
+        return self::$hasMontoEstimado;
+    }
+
     private static function normalizeCategoria(?string $value): string
     {
         $normalized = strtoupper(trim((string) $value));
@@ -40,6 +58,9 @@ class Servicio
     public static function all(array $filters = []): array
     {
         $pdo = Database::connection();
+        $estimatedAmountSql = self::hasMontoEstimadoColumn()
+            ? 'servicios.monto_estimado AS estimated_amount'
+            : '0 AS estimated_amount';
         $sql = 'SELECT servicios.id,
             servicios.folio,
             servicios.cliente_id,
@@ -50,7 +71,7 @@ class Servicio
             servicios.prioridad,
             servicios.estatus AS status,
             servicios.fecha_programada AS scheduled_at,
-            servicios.monto_estimado AS estimated_amount,
+            ' . $estimatedAmountSql . ',
             servicios.creado_en AS created_at,
             servicios.actualizado_en AS updated_at,
             COALESCE(SUM(pagos.monto), 0) AS amount,
@@ -88,6 +109,9 @@ class Servicio
     public static function find(int $id): ?array
     {
         $pdo = Database::connection();
+        $estimatedAmountSql = self::hasMontoEstimadoColumn()
+            ? 'servicios.monto_estimado AS estimated_amount'
+            : '0 AS estimated_amount';
         $stmt = $pdo->prepare('SELECT servicios.id,
             servicios.folio,
             servicios.cliente_id,
@@ -98,7 +122,7 @@ class Servicio
             servicios.prioridad,
             servicios.estatus AS status,
             servicios.fecha_programada AS scheduled_at,
-            servicios.monto_estimado AS estimated_amount,
+            ' . $estimatedAmountSql . ',
             servicios.creado_en AS created_at,
             servicios.actualizado_en AS updated_at,
             COALESCE(SUM(pagos.monto), 0) AS amount,
@@ -123,8 +147,18 @@ class Servicio
         $folio = $data['folio'] ?? ('SRV-' . date('YmdHis') . '-' . random_int(100, 999));
         $categoria = self::normalizeCategoria($data['categoria'] ?? $data['type'] ?? '');
         $tipo = self::normalizeTipo($data['tipo'] ?? $data['service_type'] ?? null);
-        $stmt = $pdo->prepare('INSERT INTO servicios (folio, cliente_id, categoria, tipo, descripcion, prioridad, estatus, fecha_programada, monto_estimado, tecnico_id) VALUES (:folio, :cliente_id, :categoria, :type, :description, :priority, :status, :scheduled_at, :estimated_amount, :tecnico_id)');
-        $stmt->execute([
+        $columns = [
+            'folio',
+            'cliente_id',
+            'categoria',
+            'tipo',
+            'descripcion',
+            'prioridad',
+            'estatus',
+            'fecha_programada',
+            'tecnico_id',
+        ];
+        $values = [
             'folio' => $folio,
             'cliente_id' => $data['cliente_id'],
             'categoria' => $categoria,
@@ -133,9 +167,17 @@ class Servicio
             'priority' => $data['priority'] ?? 'media',
             'status' => $data['status'],
             'scheduled_at' => $data['scheduled_at'],
-            'estimated_amount' => $data['estimated_amount'] ?? 0,
             'tecnico_id' => $data['tecnico_id'] ?? null,
-        ]);
+        ];
+
+        if (self::hasMontoEstimadoColumn()) {
+            $columns[] = 'monto_estimado';
+            $values['estimated_amount'] = $data['estimated_amount'] ?? 0;
+        }
+
+        $placeholders = array_map(static fn (string $column): string => ':' . self::columnPlaceholder($column), $columns);
+        $stmt = $pdo->prepare('INSERT INTO servicios (' . implode(', ', $columns) . ') VALUES (' . implode(', ', $placeholders) . ')');
+        $stmt->execute(self::mapColumnValues($columns, $values));
         return (int) $pdo->lastInsertId();
     }
 
@@ -144,19 +186,30 @@ class Servicio
         $pdo = Database::connection();
         $categoria = self::normalizeCategoria($data['categoria'] ?? $data['type'] ?? '');
         $tipo = self::normalizeTipo($data['tipo'] ?? $data['service_type'] ?? null);
-        $stmt = $pdo->prepare('UPDATE servicios SET cliente_id = :cliente_id, categoria = :categoria, tipo = :type, descripcion = :description, prioridad = :priority, estatus = :status, fecha_programada = :scheduled_at, monto_estimado = :estimated_amount, tecnico_id = :tecnico_id WHERE id = :id');
-        $stmt->execute([
-            'id' => $id,
+        $fields = [
             'cliente_id' => $data['cliente_id'],
             'categoria' => $categoria,
-            'type' => $tipo,
-            'description' => $data['description'],
-            'priority' => $data['priority'] ?? 'media',
-            'status' => $data['status'],
-            'scheduled_at' => $data['scheduled_at'],
-            'estimated_amount' => $data['estimated_amount'] ?? 0,
+            'tipo' => $tipo,
+            'descripcion' => $data['description'],
+            'prioridad' => $data['priority'] ?? 'media',
+            'estatus' => $data['status'],
+            'fecha_programada' => $data['scheduled_at'],
             'tecnico_id' => $data['tecnico_id'] ?? null,
-        ]);
+        ];
+
+        if (self::hasMontoEstimadoColumn()) {
+            $fields['monto_estimado'] = $data['estimated_amount'] ?? 0;
+        }
+
+        $setParts = [];
+        foreach ($fields as $column => $value) {
+            $setParts[] = $column . ' = :' . self::columnPlaceholder($column);
+        }
+
+        $stmt = $pdo->prepare('UPDATE servicios SET ' . implode(', ', $setParts) . ' WHERE id = :id');
+        $values = self::mapColumnValues(array_keys($fields), $fields);
+        $values['id'] = $id;
+        $stmt->execute($values);
     }
 
     public static function updateStatus(int $id, string $status): void
@@ -177,5 +230,27 @@ class Servicio
     {
         $pdo = Database::connection();
         return (int) $pdo->query('SELECT COUNT(*) FROM servicios')->fetchColumn();
+    }
+
+    private static function columnPlaceholder(string $column): string
+    {
+        return match ($column) {
+            'tipo' => 'type',
+            'descripcion' => 'description',
+            'prioridad' => 'priority',
+            'estatus' => 'status',
+            'fecha_programada' => 'scheduled_at',
+            'monto_estimado' => 'estimated_amount',
+            default => $column,
+        };
+    }
+
+    private static function mapColumnValues(array $columns, array $values): array
+    {
+        $mapped = [];
+        foreach ($columns as $column) {
+            $mapped[self::columnPlaceholder($column)] = $values[self::columnPlaceholder($column)] ?? $values[$column] ?? null;
+        }
+        return $mapped;
     }
 }
