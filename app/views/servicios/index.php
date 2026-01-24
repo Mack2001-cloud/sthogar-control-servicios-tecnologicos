@@ -1,6 +1,22 @@
 <?php
 ob_start();
+$statusColors = [
+    'pendiente' => 'bg-warning text-dark',
+    'proceso' => 'bg-primary',
+    'finalizado' => 'bg-success',
+    'cancelado' => 'bg-danger',
+];
 ?>
+<div class="card p-3 mb-3">
+    <div class="d-flex flex-wrap align-items-center gap-2">
+        <span class="fw-semibold">Significado de colores:</span>
+        <?php foreach ($statusOptions as $value => $label): ?>
+            <span class="badge <?= e($statusColors[$value] ?? 'bg-secondary') ?>">
+                <?= e($label) ?>
+            </span>
+        <?php endforeach; ?>
+    </div>
+</div>
 <div class="card p-3">
     <form class="row g-3" method="GET" action="/servicios">
         <div class="col-md-4">
@@ -57,7 +73,11 @@ ob_start();
                     <td><?= e($servicio['cliente_name']) ?></td>
                     <td><?= e($servicio['type']) ?></td>
                     <td><?= e($servicio['tecnico_name'] ?? 'Sin asignar') ?></td>
-                    <td><span class="badge bg-info text-dark"><?= e($statusOptions[$servicio['status']] ?? $servicio['status']) ?></span></td>
+                    <td>
+                        <span class="badge <?= e($statusColors[$servicio['status']] ?? 'bg-secondary') ?>">
+                            <?= e($statusOptions[$servicio['status']] ?? $servicio['status']) ?>
+                        </span>
+                    </td>
                     <td><?= e($servicio['scheduled_at'] ?? '-') ?></td>
                     <td>$<?= e(number_format((float) $servicio['amount'], 2)) ?></td>
                     <td>
