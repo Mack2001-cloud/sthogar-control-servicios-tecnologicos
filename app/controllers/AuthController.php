@@ -41,7 +41,7 @@ class AuthController
         login_user($user);
 
         set_flash('success', 'Bienvenido/a de nuevo.');
-        header('Location: ' . AUTH_POST_LOGIN_ROUTE);
+        header('Location: ' . post_login_route());
         exit;
     }
 

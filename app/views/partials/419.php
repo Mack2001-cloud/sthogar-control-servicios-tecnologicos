@@ -1,3 +1,4 @@
+<?php $home = post_login_route(); ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -11,7 +12,7 @@
 <div class="container py-5 text-center">
     <h1 class="display-6">Sesión expirada</h1>
     <p class="text-muted">Tu sesión expiró o el token CSRF es inválido.</p>
-    <a class="btn btn-primary" href="/dashboard">Volver</a>
+    <a class="btn btn-primary" href="<?= e($home) ?>">Volver</a>
 </div>
 </body>
 </html>
