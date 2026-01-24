@@ -69,8 +69,12 @@ class ServiciosController
         $clientes = Cliente::all();
         $tecnicos = is_admin() ? Tecnico::findAll() : [];
         $defaultServiceType = $_GET['service_type'] ?? 'soporte';
-        echo view('servicios/form', [
-            'title' => 'Nuevo servicio',
+        $view = $defaultServiceType === 'instalacion' ? 'servicios/instalacion_form' : 'servicios/form';
+        $title = $defaultServiceType === 'instalacion' ? 'Nueva instalación' : 'Nuevo servicio';
+        $cancelLink = $defaultServiceType === 'instalacion' ? '/instalaciones' : '/servicios';
+
+        echo view($view, [
+            'title' => $title,
             'servicio' => [
                 'service_type' => $defaultServiceType,
             ],
@@ -78,6 +82,7 @@ class ServiciosController
             'tecnicos' => $tecnicos,
             'statusOptions' => $this->statusOptions,
             'action' => '/servicios/create',
+            'cancelLink' => $cancelLink,
         ]);
     }
 
@@ -85,21 +90,34 @@ class ServiciosController
     {
         verify_csrf();
         $tecnicoId = is_admin() ? (int) ($_POST['tecnico_id'] ?? 0) : 0;
+        $serviceType = $_POST['service_type'] ?? 'soporte';
+        $estimatedAmount = (float) ($_POST['amount'] ?? 0);
+        $budgetAmount = (float) ($_POST['budget_amount'] ?? 0);
+
+        if ($serviceType === 'instalacion') {
+            $estimatedAmount = (float) ($_POST['installation_cost'] ?? $estimatedAmount);
+            $budgetAmount = (float) ($_POST['equipment_cost'] ?? $budgetAmount);
+        }
+
         $data = [
             'cliente_id' => (int) ($_POST['cliente_id'] ?? 0),
             'type' => trim($_POST['type'] ?? ''),
-            'service_type' => $_POST['service_type'] ?? 'soporte',
+            'service_type' => $serviceType,
             'description' => trim($_POST['description'] ?? ''),
             'equipment_materials' => trim($_POST['equipment_materials'] ?? ''),
             'status' => $_POST['status'] ?? 'pendiente',
             'scheduled_at' => $_POST['scheduled_at'] ?? null,
-            'estimated_amount' => (float) ($_POST['amount'] ?? 0),
+            'estimated_amount' => $estimatedAmount,
+            'budget_amount' => $budgetAmount,
             'tecnico_id' => $tecnicoId > 0 ? $tecnicoId : null,
         ];
 
         if (!$data['cliente_id'] || !required($data['type'])) {
             set_flash('danger', 'Cliente y tipo son obligatorios.');
-            header('Location: /servicios/create');
+            $redirect = $serviceType === 'instalacion'
+                ? '/servicios/create?service_type=instalacion'
+                : '/servicios/create';
+            header('Location: ' . $redirect);
             exit;
         }
 
@@ -158,13 +176,18 @@ class ServiciosController
 
         $clientes = Cliente::all();
         $tecnicos = is_admin() ? Tecnico::findAll() : [];
-        echo view('servicios/form', [
-            'title' => 'Editar servicio',
+        $view = ($servicio['service_type'] ?? '') === 'instalacion' ? 'servicios/instalacion_form' : 'servicios/form';
+        $title = ($servicio['service_type'] ?? '') === 'instalacion' ? 'Editar instalación' : 'Editar servicio';
+        $cancelLink = ($servicio['service_type'] ?? '') === 'instalacion' ? '/instalaciones' : '/servicios';
+
+        echo view($view, [
+            'title' => $title,
             'servicio' => $servicio,
             'clientes' => $clientes,
             'tecnicos' => $tecnicos,
             'statusOptions' => $this->statusOptions,
             'action' => '/servicios/edit?id=' . $id,
+            'cancelLink' => $cancelLink,
         ]);
     }
 
@@ -180,15 +203,25 @@ class ServiciosController
         }
 
         $tecnicoId = is_admin() ? (int) ($_POST['tecnico_id'] ?? 0) : (int) ($servicio['tecnico_id'] ?? 0);
+        $serviceType = $_POST['service_type'] ?? ($servicio['service_type'] ?? 'soporte');
+        $estimatedAmount = (float) ($_POST['amount'] ?? 0);
+        $budgetAmount = (float) ($_POST['budget_amount'] ?? ($servicio['budget_amount'] ?? 0));
+
+        if ($serviceType === 'instalacion') {
+            $estimatedAmount = (float) ($_POST['installation_cost'] ?? $estimatedAmount);
+            $budgetAmount = (float) ($_POST['equipment_cost'] ?? $budgetAmount);
+        }
+
         $data = [
             'cliente_id' => (int) ($_POST['cliente_id'] ?? 0),
             'type' => trim($_POST['type'] ?? ''),
-            'service_type' => $_POST['service_type'] ?? 'soporte',
+            'service_type' => $serviceType,
             'description' => trim($_POST['description'] ?? ''),
             'equipment_materials' => trim($_POST['equipment_materials'] ?? ''),
             'status' => $_POST['status'] ?? 'pendiente',
             'scheduled_at' => $_POST['scheduled_at'] ?? null,
-            'estimated_amount' => (float) ($_POST['amount'] ?? 0),
+            'estimated_amount' => $estimatedAmount,
+            'budget_amount' => $budgetAmount,
             'tecnico_id' => $tecnicoId > 0 ? $tecnicoId : null,
         ];
 
