@@ -10,6 +10,7 @@ use App\Controllers\PagosController;
 use App\Controllers\AdjuntosController;
 use App\Controllers\ExportController;
 use App\Controllers\AdminTecnicosController;
+use App\Controllers\AdminAgentesVentasController;
 
 require __DIR__ . '/../app/config/auth.php';
 require __DIR__ . '/../app/helpers/view.php';
@@ -51,6 +52,7 @@ $pagosController = new PagosController();
 $adjuntosController = new AdjuntosController();
 $exportController = new ExportController();
 $adminTecnicosController = new AdminTecnicosController();
+$adminAgentesVentasController = new AdminAgentesVentasController();
 
 $adminMiddleware = ['auth_middleware', role_required_any(['admin', 'ventas'])];
 $adminOnlyMiddleware = ['auth_middleware', role_required('admin')];
@@ -110,5 +112,13 @@ $router->add('GET', '/admin/tecnicos/edit', [$adminTecnicosController, 'editForm
 $router->add('POST', '/admin/tecnicos/edit', [$adminTecnicosController, 'update'], $adminOnlyMiddleware);
 $router->add('POST', '/admin/tecnicos/toggle', [$adminTecnicosController, 'toggle'], $adminOnlyMiddleware);
 $router->add('POST', '/admin/tecnicos/delete', [$adminTecnicosController, 'delete'], $adminOnlyMiddleware);
+
+$router->add('GET', '/admin/agentes-ventas', [$adminAgentesVentasController, 'index'], $adminOnlyMiddleware);
+$router->add('GET', '/admin/agentes-ventas/create', [$adminAgentesVentasController, 'createForm'], $adminOnlyMiddleware);
+$router->add('POST', '/admin/agentes-ventas/create', [$adminAgentesVentasController, 'create'], $adminOnlyMiddleware);
+$router->add('GET', '/admin/agentes-ventas/edit', [$adminAgentesVentasController, 'editForm'], $adminOnlyMiddleware);
+$router->add('POST', '/admin/agentes-ventas/edit', [$adminAgentesVentasController, 'update'], $adminOnlyMiddleware);
+$router->add('POST', '/admin/agentes-ventas/toggle', [$adminAgentesVentasController, 'toggle'], $adminOnlyMiddleware);
+$router->add('POST', '/admin/agentes-ventas/delete', [$adminAgentesVentasController, 'delete'], $adminOnlyMiddleware);
 
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
