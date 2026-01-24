@@ -44,6 +44,11 @@ ob_start();
                                     <?= (int) $tecnico['activo'] === 1 ? 'Desactivar' : 'Activar' ?>
                                 </button>
                             </form>
+                            <form method="POST" action="/admin/tecnicos/delete" onsubmit="return confirm('¿Eliminar este técnico? Esta acción no se puede deshacer.');">
+                                <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
+                                <input type="hidden" name="id" value="<?= e((string) $tecnico['id']) ?>">
+                                <button class="btn btn-sm btn-outline-danger" type="submit">Eliminar</button>
+                            </form>
                         </div>
                     </td>
                 </tr>

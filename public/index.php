@@ -105,5 +105,6 @@ $router->add('POST', '/admin/tecnicos/create', [$adminTecnicosController, 'creat
 $router->add('GET', '/admin/tecnicos/edit', [$adminTecnicosController, 'editForm'], $adminMiddleware);
 $router->add('POST', '/admin/tecnicos/edit', [$adminTecnicosController, 'update'], $adminMiddleware);
 $router->add('POST', '/admin/tecnicos/toggle', [$adminTecnicosController, 'toggle'], $adminMiddleware);
+$router->add('POST', '/admin/tecnicos/delete', [$adminTecnicosController, 'delete'], $adminMiddleware);
 
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);

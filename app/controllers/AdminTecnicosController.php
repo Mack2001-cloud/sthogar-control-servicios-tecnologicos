@@ -250,4 +250,33 @@ class AdminTecnicosController
         header('Location: /admin/tecnicos');
         exit;
     }
+
+    public function delete(): void
+    {
+        verify_csrf();
+
+        $id = (int) ($_POST['id'] ?? 0);
+        if ($id <= 0) {
+            set_flash('danger', 'Técnico inválido.');
+            header('Location: /admin/tecnicos');
+            exit;
+        }
+
+        $tecnico = Tecnico::findById($id);
+        if (!$tecnico) {
+            http_response_code(404);
+            echo view('partials/404');
+            return;
+        }
+
+        try {
+            Tecnico::delete($id);
+            set_flash('success', 'Técnico eliminado correctamente.');
+        } catch (\Throwable $e) {
+            set_flash('danger', 'No se pudo eliminar el técnico.');
+        }
+
+        header('Location: /admin/tecnicos');
+        exit;
+    }
 }

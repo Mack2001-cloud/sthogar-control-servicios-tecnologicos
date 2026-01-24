@@ -124,4 +124,27 @@ class Tecnico
 
         $pdo->commit();
     }
+
+    public static function delete(int $id): void
+    {
+        $pdo = Database::connection();
+        $pdo->beginTransaction();
+
+        $stmt = $pdo->prepare('SELECT usuario_id FROM tecnicos WHERE id = :id');
+        $stmt->execute(['id' => $id]);
+        $usuarioId = $stmt->fetchColumn();
+
+        if (!$usuarioId) {
+            $pdo->rollBack();
+            return;
+        }
+
+        $deleteTecnico = $pdo->prepare('DELETE FROM tecnicos WHERE id = :id');
+        $deleteTecnico->execute(['id' => $id]);
+
+        $deleteUsuario = $pdo->prepare('DELETE FROM usuarios WHERE id = :id');
+        $deleteUsuario->execute(['id' => (int) $usuarioId]);
+
+        $pdo->commit();
+    }
 }
