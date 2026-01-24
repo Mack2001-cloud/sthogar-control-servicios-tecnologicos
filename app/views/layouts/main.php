@@ -41,8 +41,10 @@ $user = auth_user();
             <?php if (is_admin()): ?>
                 <li class="nav-item"><a class="nav-link" href="/admin/tecnicos">Técnicos</a></li>
             <?php endif; ?>
-            <li class="nav-item"><a class="nav-link" href="/export/clientes.csv">Exportar clientes</a></li>
-            <li class="nav-item"><a class="nav-link" href="/export/servicios.csv">Exportar servicios</a></li>
+            <?php if (is_admin()): ?>
+                <li class="nav-item"><a class="nav-link" href="/export/clientes.csv">Exportar clientes</a></li>
+                <li class="nav-item"><a class="nav-link" href="/export/servicios.csv">Exportar servicios</a></li>
+            <?php endif; ?>
         </ul>
     </nav>
 

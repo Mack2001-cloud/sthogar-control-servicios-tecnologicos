@@ -7,7 +7,9 @@ ob_start();
         <button class="btn btn-primary" type="submit">Buscar</button>
     </form>
     <div class="d-flex gap-2">
-        <a class="btn btn-outline-light" href="/export/clientes.csv">Exportar CSV</a>
+        <?php if (is_admin()): ?>
+            <a class="btn btn-outline-light" href="/export/clientes.csv">Exportar CSV</a>
+        <?php endif; ?>
         <a class="btn btn-success" href="/clientes/create">Nuevo cliente</a>
     </div>
 </div>
