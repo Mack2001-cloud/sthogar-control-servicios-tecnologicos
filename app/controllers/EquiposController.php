@@ -34,6 +34,7 @@ class EquiposController
         $data = [
             'cliente_id' => (int) ($_POST['cliente_id'] ?? 0),
             'name' => trim($_POST['name'] ?? ''),
+            'model' => trim($_POST['model'] ?? ''),
             'serial_number' => trim($_POST['serial_number'] ?? ''),
             'location' => trim($_POST['location'] ?? ''),
             'notes' => trim($_POST['notes'] ?? ''),
@@ -84,6 +85,7 @@ class EquiposController
         $data = [
             'cliente_id' => (int) ($_POST['cliente_id'] ?? 0),
             'name' => trim($_POST['name'] ?? ''),
+            'model' => trim($_POST['model'] ?? ''),
             'serial_number' => trim($_POST['serial_number'] ?? ''),
             'location' => trim($_POST['location'] ?? ''),
             'notes' => trim($_POST['notes'] ?? ''),

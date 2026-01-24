@@ -11,10 +11,9 @@ ob_start();
         <table class="table table-dark table-hover mb-0">
             <thead>
             <tr>
-                <th>Equipo</th>
-                <th>Serial</th>
-                <th>Cliente</th>
-                <th>Ubicación</th>
+                <th>Producto</th>
+                <th>Modelo</th>
+                <th>Características técnicas</th>
                 <th>Acciones</th>
             </tr>
             </thead>
@@ -22,9 +21,8 @@ ob_start();
             <?php foreach ($equipos as $equipo): ?>
                 <tr>
                     <td><?= e($equipo['name']) ?></td>
-                    <td><?= e($equipo['serial_number']) ?></td>
-                    <td><?= e($equipo['cliente_name'] ?? 'Sin asignar') ?></td>
-                    <td><?= e($equipo['location']) ?></td>
+                    <td><?= e($equipo['model'] ?? 'Sin especificar') ?></td>
+                    <td><?= e($equipo['notes'] ?: 'Sin especificar') ?></td>
                     <td>
                         <div class="d-flex gap-2">
                             <a class="btn btn-sm btn-outline-light" href="/equipos/edit?id=<?= e((string) $equipo['id']) ?>">Editar</a>
@@ -41,7 +39,7 @@ ob_start();
             <?php endforeach; ?>
             <?php if (!$equipos): ?>
                 <tr>
-                    <td colspan="5" class="text-center text-muted">Sin equipos registrados.</td>
+                    <td colspan="4" class="text-center text-muted">Sin equipos registrados.</td>
                 </tr>
             <?php endif; ?>
             </tbody>

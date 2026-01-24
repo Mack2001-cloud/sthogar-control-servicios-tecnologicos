@@ -3,6 +3,7 @@ ob_start();
 $equipo = $equipo ?? [
     'cliente_id' => '',
     'name' => '',
+    'model' => '',
     'serial_number' => '',
     'location' => '',
     'notes' => '',
@@ -27,6 +28,10 @@ $equipo = $equipo ?? [
             <input type="text" name="name" class="form-control" value="<?= e($equipo['name']) ?>" required>
         </div>
         <div class="col-md-6">
+            <label class="form-label">Modelo</label>
+            <input type="text" name="model" class="form-control" value="<?= e($equipo['model'] ?? '') ?>">
+        </div>
+        <div class="col-md-6">
             <label class="form-label">Serial</label>
             <input type="text" name="serial_number" class="form-control" value="<?= e($equipo['serial_number']) ?>">
         </div>
@@ -35,7 +40,7 @@ $equipo = $equipo ?? [
             <input type="text" name="location" class="form-control" value="<?= e($equipo['location']) ?>">
         </div>
         <div class="col-12">
-            <label class="form-label">Notas</label>
+            <label class="form-label">Características técnicas</label>
             <textarea name="notes" class="form-control" rows="3"><?= e($equipo['notes']) ?></textarea>
         </div>
     </div>
