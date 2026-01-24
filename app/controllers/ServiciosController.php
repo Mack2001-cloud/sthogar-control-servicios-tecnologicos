@@ -24,6 +24,7 @@ class ServiciosController
         $filters = [
             'status' => $_GET['status'] ?? '',
             'cliente_id' => $_GET['cliente_id'] ?? '',
+            'service_type' => $_GET['service_type'] ?? '',
         ];
 
         $servicios = Servicio::all($filters);
@@ -38,13 +39,40 @@ class ServiciosController
         ]);
     }
 
+    public function instalaciones(): void
+    {
+        $filters = [
+            'status' => $_GET['status'] ?? '',
+            'cliente_id' => $_GET['cliente_id'] ?? '',
+            'service_type' => 'instalacion',
+        ];
+
+        $servicios = Servicio::all($filters);
+        $clientes = Cliente::all();
+
+        echo view('servicios/index', [
+            'title' => 'Instalaciones',
+            'servicios' => $servicios,
+            'clientes' => $clientes,
+            'filters' => $filters,
+            'statusOptions' => $this->statusOptions,
+            'filterAction' => '/instalaciones',
+            'listHeading' => 'Listado de instalaciones',
+            'createLabel' => 'Nueva instalación',
+            'createLink' => '/servicios/create?service_type=instalacion',
+        ]);
+    }
+
     public function createForm(): void
     {
         $clientes = Cliente::all();
         $tecnicos = is_admin() ? Tecnico::findAll() : [];
+        $defaultServiceType = $_GET['service_type'] ?? 'soporte';
         echo view('servicios/form', [
             'title' => 'Nuevo servicio',
-            'servicio' => null,
+            'servicio' => [
+                'service_type' => $defaultServiceType,
+            ],
             'clientes' => $clientes,
             'tecnicos' => $tecnicos,
             'statusOptions' => $this->statusOptions,
@@ -59,6 +87,7 @@ class ServiciosController
         $data = [
             'cliente_id' => (int) ($_POST['cliente_id'] ?? 0),
             'type' => trim($_POST['type'] ?? ''),
+            'service_type' => $_POST['service_type'] ?? 'soporte',
             'description' => trim($_POST['description'] ?? ''),
             'status' => $_POST['status'] ?? 'pendiente',
             'scheduled_at' => $_POST['scheduled_at'] ?? null,
@@ -150,6 +179,7 @@ class ServiciosController
         $data = [
             'cliente_id' => (int) ($_POST['cliente_id'] ?? 0),
             'type' => trim($_POST['type'] ?? ''),
+            'service_type' => $_POST['service_type'] ?? 'soporte',
             'description' => trim($_POST['description'] ?? ''),
             'status' => $_POST['status'] ?? 'pendiente',
             'scheduled_at' => $_POST['scheduled_at'] ?? null,

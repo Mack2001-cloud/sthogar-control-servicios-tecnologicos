@@ -73,6 +73,11 @@ class Servicio
             $params['cliente_id'] = $filters['cliente_id'];
         }
 
+        if (!empty($filters['service_type'])) {
+            $sql .= ' AND servicios.tipo = :service_type';
+            $params['service_type'] = $filters['service_type'];
+        }
+
         $sql .= ' GROUP BY servicios.id ORDER BY servicios.creado_en DESC';
         $stmt = $pdo->prepare($sql);
         $stmt->execute($params);

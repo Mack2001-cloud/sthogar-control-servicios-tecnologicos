@@ -6,6 +6,10 @@ $statusColors = [
     'finalizado' => 'bg-success',
     'cancelado' => 'bg-danger',
 ];
+$filterAction = $filterAction ?? '/servicios';
+$listHeading = $listHeading ?? 'Listado de servicios';
+$createLabel = $createLabel ?? 'Nuevo servicio';
+$createLink = $createLink ?? '/servicios/create';
 ?>
 <div class="card p-3 mb-3">
     <div class="d-flex flex-wrap align-items-center gap-2">
@@ -18,7 +22,7 @@ $statusColors = [
     </div>
 </div>
 <div class="card p-3">
-    <form class="row g-3" method="GET" action="/servicios">
+    <form class="row g-3" method="GET" action="<?= e($filterAction) ?>">
         <div class="col-md-4">
             <label class="form-label">Cliente</label>
             <select name="cliente_id" class="form-select">
@@ -41,16 +45,19 @@ $statusColors = [
                 <?php endforeach; ?>
             </select>
         </div>
+        <?php if (!empty($filters['service_type'])): ?>
+            <input type="hidden" name="service_type" value="<?= e((string) $filters['service_type']) ?>">
+        <?php endif; ?>
         <div class="col-md-4 d-flex align-items-end gap-2">
             <button class="btn btn-primary" type="submit">Filtrar</button>
-            <a class="btn btn-outline-light" href="/servicios">Limpiar</a>
+            <a class="btn btn-outline-light" href="<?= e($filterAction) ?>">Limpiar</a>
         </div>
     </form>
 </div>
 
 <div class="d-flex justify-content-between align-items-center mt-4">
-    <h2 class="h5 mb-0">Listado de servicios</h2>
-    <a class="btn btn-success" href="/servicios/create">Nuevo servicio</a>
+    <h2 class="h5 mb-0"><?= e($listHeading) ?></h2>
+    <a class="btn btn-success" href="<?= e($createLink) ?>"><?= e($createLabel) ?></a>
 </div>
 
 <div class="card mt-3">
