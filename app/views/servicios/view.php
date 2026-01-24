@@ -6,6 +6,7 @@ $extrasDescription = $servicio['extras_description'] ?? '';
 $equipmentMaterials = $servicio['equipment_materials'] ?? '';
 $budgetExceeds = $budgetAmount > (float) ($servicio['estimated_amount'] ?? 0);
 $showBudgetSection = ($servicio['service_type'] ?? '') === 'instalacion';
+$serviceLabel = $showBudgetSection ? 'Instalación' : 'Servicio';
 $documentacion = $documentacion ?? [];
 $documentacionItems = $documentacion['items'] ?? [];
 $documentacionItems = array_pad($documentacionItems, 8, [
@@ -22,7 +23,7 @@ $documentacionTotal = $documentacion['total'] ?? '';
 <div class="row g-4">
     <div class="col-lg-8">
         <div class="card p-4 mb-4">
-            <h5>Servicio #<?= e((string) $servicio['id']) ?></h5>
+            <h5><?= e($serviceLabel) ?> #<?= e((string) $servicio['id']) ?></h5>
             <p class="text-muted">Cliente: <?= e($servicio['cliente_name']) ?> (<?= e($servicio['cliente_email'] ?? '') ?>)</p>
             <div class="row">
                 <div class="col-md-6"><strong>Tipo:</strong> <?= e($servicio['type']) ?></div>
