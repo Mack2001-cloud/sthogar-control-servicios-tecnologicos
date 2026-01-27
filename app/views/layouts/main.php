@@ -37,7 +37,6 @@ $user = auth_user();
             <li class="nav-item"><a class="nav-link" href="/clientes">Clientes</a></li>
             <li class="nav-item"><a class="nav-link" href="/servicios">Servicios</a></li>
             <li class="nav-item"><a class="nav-link" href="/instalaciones">Instalaciones</a></li>
-            <li class="nav-item"><a class="nav-link" href="/equipos">Equipos</a></li>
             <?php if (is_admin_only()): ?>
                 <li class="nav-item"><a class="nav-link" href="/admin/tecnicos">Técnicos</a></li>
                 <li class="nav-item"><a class="nav-link" href="/admin/agentes-ventas">Agentes de ventas</a></li>

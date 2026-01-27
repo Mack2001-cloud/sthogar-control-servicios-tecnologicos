@@ -5,7 +5,6 @@ use App\Controllers\AuthController;
 use App\Controllers\DashboardController;
 use App\Controllers\ClientesController;
 use App\Controllers\ServiciosController;
-use App\Controllers\EquiposController;
 use App\Controllers\PagosController;
 use App\Controllers\AdjuntosController;
 use App\Controllers\ExportController;
@@ -47,7 +46,6 @@ $authController = new AuthController();
 $dashboardController = new DashboardController();
 $clientesController = new ClientesController();
 $serviciosController = new ServiciosController();
-$equiposController = new EquiposController();
 $pagosController = new PagosController();
 $adjuntosController = new AdjuntosController();
 $exportController = new ExportController();
@@ -91,14 +89,8 @@ $router->add('POST', '/servicios/edit', [$serviciosController, 'update'], $gener
 $router->add('POST', '/servicios/status', [$serviciosController, 'updateStatus'], $generalMiddleware);
 $router->add('POST', '/servicios/presupuesto', [$serviciosController, 'updateBudget'], $generalMiddleware);
 $router->add('POST', '/servicios/documentacion', [$serviciosController, 'updateDocumentation'], $generalMiddleware);
+$router->add('POST', '/servicios/equipos/create', [$serviciosController, 'addEquipo'], $generalMiddleware);
 $router->add('POST', '/servicios/delete', [$serviciosController, 'delete'], $adminMiddleware);
-
-$router->add('GET', '/equipos', [$equiposController, 'index'], $generalMiddleware);
-$router->add('GET', '/equipos/create', [$equiposController, 'createForm'], $adminMiddleware);
-$router->add('POST', '/equipos/create', [$equiposController, 'create'], $adminMiddleware);
-$router->add('GET', '/equipos/edit', [$equiposController, 'editForm'], $adminMiddleware);
-$router->add('POST', '/equipos/edit', [$equiposController, 'update'], $adminMiddleware);
-$router->add('POST', '/equipos/delete', [$equiposController, 'delete'], $adminMiddleware);
 
 $router->add('POST', '/pagos/create', [$pagosController, 'create'], $generalMiddleware);
 $router->add('POST', '/adjuntos/upload', [$adjuntosController, 'upload'], $generalMiddleware);

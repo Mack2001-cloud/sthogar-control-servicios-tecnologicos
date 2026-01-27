@@ -327,6 +327,40 @@ class ServiciosController
         exit;
     }
 
+    public function addEquipo(): void
+    {
+        verify_csrf();
+        $servicioId = (int) ($_POST['servicio_id'] ?? 0);
+        $servicio = Servicio::find($servicioId);
+        if (!$servicio) {
+            http_response_code(404);
+            echo view('partials/404');
+            return;
+        }
+
+        $equipoName = trim((string) ($_POST['equipment_name'] ?? ''));
+        if ($equipoName === '') {
+            set_flash('danger', 'El nombre del equipo es obligatorio.');
+            header('Location: /servicios/view?id=' . $servicioId);
+            exit;
+        }
+
+        Equipo::create([
+            'cliente_id' => (int) $servicio['cliente_id'],
+            'servicio_id' => $servicioId,
+            'name' => $equipoName,
+            'brand' => 'Sin especificar',
+            'model' => 'Sin especificar',
+            'serial_number' => '',
+            'location' => '',
+            'notes' => '',
+        ]);
+
+        set_flash('success', 'Equipo agregado al servicio.');
+        header('Location: /servicios/view?id=' . $servicioId);
+        exit;
+    }
+
     public function delete(): void
     {
         verify_csrf();

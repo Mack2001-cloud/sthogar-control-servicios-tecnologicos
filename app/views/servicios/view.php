@@ -248,13 +248,24 @@ $documentacionTotal = $documentacion['total'] ?? '';
                 <?php foreach ($equipos as $equipo): ?>
                     <li class="list-group-item bg-transparent text-light">
                         <strong><?= e($equipo['name']) ?></strong><br>
-                        <small class="text-muted">Serial: <?= e($equipo['serial_number']) ?></small>
+                        <?php if (!empty($equipo['serial_number'])): ?>
+                            <small class="text-muted">Serial: <?= e($equipo['serial_number']) ?></small>
+                        <?php endif; ?>
                     </li>
                 <?php endforeach; ?>
                 <?php if (!$equipos): ?>
                     <li class="list-group-item bg-transparent text-muted">Sin equipos registrados para el cliente.</li>
                 <?php endif; ?>
             </ul>
+            <form method="POST" action="/servicios/equipos/create" class="mt-3">
+                <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
+                <input type="hidden" name="servicio_id" value="<?= e((string) $servicio['id']) ?>">
+                <label class="form-label">Agregar equipo o producto</label>
+                <div class="input-group">
+                    <input type="text" name="equipment_name" class="form-control" placeholder="Nombre del equipo o producto" required>
+                    <button class="btn btn-outline-light" type="submit">Agregar</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

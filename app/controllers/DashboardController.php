@@ -14,13 +14,13 @@ class DashboardController
         $stats = [
             'clientes' => Cliente::countAll(),
             'servicios' => Servicio::countAll(),
-            'equipos' => Equipo::countAll(),
         ];
 
         echo view('dashboard/index', [
             'title' => 'Dashboard',
             'stats' => $stats,
             'incomeByTechnician' => Tecnico::incomeSummary(),
+            'equipmentSales' => Equipo::salesSummary(),
         ]);
     }
 }
