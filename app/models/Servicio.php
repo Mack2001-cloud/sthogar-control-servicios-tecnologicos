@@ -116,6 +116,11 @@ class Servicio
             $params['service_type'] = $filters['service_type'];
         }
 
+        if (!empty($filters['exclude_service_type'])) {
+            $sql .= ' AND servicios.tipo != :exclude_service_type';
+            $params['exclude_service_type'] = $filters['exclude_service_type'];
+        }
+
         $sql .= ' GROUP BY servicios.id ORDER BY servicios.creado_en DESC';
         $stmt = $pdo->prepare($sql);
         $stmt->execute($params);

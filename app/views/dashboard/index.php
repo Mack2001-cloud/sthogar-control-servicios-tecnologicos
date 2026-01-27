@@ -1,7 +1,6 @@
 <?php
 ob_start();
 $incomeByTechnician = $incomeByTechnician ?? [];
-$equipmentSales = $equipmentSales ?? [];
 $incomeLabels = array_map(
     static fn(array $row): string => (string) ($row['tecnico_name'] ?? ''),
     $incomeByTechnician
@@ -12,18 +11,34 @@ $incomeTotals = array_map(
 );
 $incomeLabelsJson = json_encode($incomeLabels, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
 $incomeTotalsJson = json_encode($incomeTotals, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
-$equipmentLabels = array_map(
-    static fn(array $row): string => (string) ($row['name'] ?? ''),
-    $equipmentSales
-);
-$equipmentTotals = array_map(
-    static fn(array $row): int => (int) ($row['total'] ?? 0),
-    $equipmentSales
-);
-$equipmentLabelsJson = json_encode($equipmentLabels, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
-$equipmentTotalsJson = json_encode($equipmentTotals, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
 ?>
 <div class="row g-4">
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-body">
+                <h6 class="text-uppercase text-muted">Acciones rápidas</h6>
+                <div class="d-flex gap-2 flex-wrap">
+                    <a class="btn btn-outline-light" href="/clientes/create">Nuevo cliente</a>
+                    <a class="btn btn-outline-light" href="/servicios/create">Nuevo servicio</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-body">
+                <h6 class="text-uppercase text-muted">Recomendaciones</h6>
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2">• Mantén la bitácora actualizada para cada servicio.</li>
+                    <li class="mb-2">• Adjunta evidencias antes de cerrar un servicio.</li>
+                    <li>• Exporta reportes para respaldos periódicos.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mt-1">
     <div class="col-md-6">
         <div class="card stat-card">
             <div class="card-body">
@@ -65,55 +80,7 @@ $equipmentTotalsJson = json_encode($equipmentTotals, JSON_HEX_TAG | JSON_HEX_APO
         </div>
     </div>
 </div>
-
-<div class="row g-4 mt-1">
-    <div class="col-12">
-        <div class="card h-100">
-            <div class="card-body">
-                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
-                    <div>
-                        <h6 class="text-uppercase text-muted mb-1">Ventas de equipos y productos</h6>
-                        <p class="mb-0 text-muted small">Agrupado por nombre del equipo registrado.</p>
-                    </div>
-                </div>
-                <?php if ($equipmentSales): ?>
-                    <div class="chart-container mt-3">
-                        <canvas id="equipmentSalesChart" height="120"></canvas>
-                    </div>
-                <?php else: ?>
-                    <p class="text-muted mt-3 mb-0">Aún no hay equipos registrados para ventas.</p>
-                <?php endif; ?>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row g-4 mt-1">
-    <div class="col-lg-6">
-        <div class="card h-100">
-            <div class="card-body">
-                <h6 class="text-uppercase text-muted">Acciones rápidas</h6>
-                <div class="d-flex gap-2 flex-wrap">
-                    <a class="btn btn-outline-light" href="/clientes/create">Nuevo cliente</a>
-                    <a class="btn btn-outline-light" href="/servicios/create">Nuevo servicio</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-6">
-        <div class="card h-100">
-            <div class="card-body">
-                <h6 class="text-uppercase text-muted">Recomendaciones</h6>
-                <ul class="list-unstyled mb-0">
-                    <li class="mb-2">• Mantén la bitácora actualizada para cada servicio.</li>
-                    <li class="mb-2">• Adjunta evidencias antes de cerrar un servicio.</li>
-                    <li>• Exporta reportes para respaldos periódicos.</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
-<?php if ($incomeByTechnician || $equipmentSales): ?>
+<?php if ($incomeByTechnician): ?>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script>
         (() => {
@@ -181,64 +148,7 @@ $equipmentTotalsJson = json_encode($equipmentTotals, JSON_HEX_TAG | JSON_HEX_APO
                     },
                 });
             };
-
-            const initEquipmentChart = () => {
-                const labels = <?= $equipmentLabelsJson ?: '[]' ?>;
-                const values = <?= $equipmentTotalsJson ?: '[]' ?>;
-                const canvas = document.getElementById('equipmentSalesChart');
-
-                if (!canvas) {
-                    return;
-                }
-
-                const chartContext = canvas.getContext('2d');
-
-                new Chart(chartContext, {
-                    type: 'bar',
-                    data: {
-                        labels,
-                        datasets: [{
-                            label: 'Ventas',
-                            data: values,
-                            backgroundColor: '#ffbe0b',
-                            borderRadius: 8,
-                            borderSkipped: false,
-                        }],
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                display: false,
-                            },
-                        },
-                        scales: {
-                            x: {
-                                ticks: {
-                                    color: getComputedStyle(document.documentElement).getPropertyValue('--text-muted'),
-                                },
-                                grid: {
-                                    color: 'rgba(255, 255, 255, 0.06)',
-                                },
-                            },
-                            y: {
-                                beginAtZero: true,
-                                ticks: {
-                                    precision: 0,
-                                    color: getComputedStyle(document.documentElement).getPropertyValue('--text-muted'),
-                                },
-                                grid: {
-                                    color: 'rgba(255, 255, 255, 0.06)',
-                                },
-                            },
-                        },
-                    },
-                });
-            };
-
             initIncomeChart();
-            initEquipmentChart();
         })();
     </script>
 <?php endif; ?>
