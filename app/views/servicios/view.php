@@ -18,16 +18,40 @@ $documentacionTotal = $documentacion['total'] ?? '';
 <div class="row g-4">
     <div class="col-lg-8">
         <div class="card p-4 mb-4">
-            <h5><?= e($serviceLabel) ?> #<?= e((string) $servicio['id']) ?></h5>
-            <p class="text-muted">Cliente: <?= e($servicio['cliente_name']) ?> (<?= e($servicio['cliente_email'] ?? '') ?>)</p>
-            <div class="row">
-                <div class="col-md-6"><strong>Tipo:</strong> <?= e($servicio['type']) ?></div>
-                <div class="col-md-6"><strong>Técnico:</strong> <?= e($servicio['tecnico_name'] ?? 'Sin asignar') ?></div>
-                <div class="col-md-6"><strong>Estado:</strong> <?= e($statusOptions[$servicio['status']] ?? $servicio['status']) ?></div>
-                <div class="col-md-6"><strong>Programado:</strong> <?= e($servicio['scheduled_at'] ?? '-') ?></div>
-                <div class="col-md-6"><strong>Monto estimado:</strong> $<?= e(number_format((float) $servicio['estimated_amount'], 2)) ?></div>
-                <div class="col-md-6"><strong>Monto pagado:</strong> $<?= e(number_format((float) $servicio['amount'], 2)) ?></div>
-        </div>
+            <div class="d-flex flex-wrap justify-content-between align-items-start gap-2">
+                <div>
+                    <h5 class="mb-1"><?= e($serviceLabel) ?> #<?= e((string) $servicio['id']) ?></h5>
+                    <p class="text-muted mb-0">
+                        Cliente: <?= e($servicio['cliente_name']) ?> (<?= e($servicio['cliente_email'] ?? 'Sin correo') ?>)
+                    </p>
+                </div>
+                <span class="badge bg-primary-subtle text-primary">
+                    <?= e($statusOptions[$servicio['status']] ?? $servicio['status']) ?>
+                </span>
+            </div>
+
+            <div class="row mt-4 g-3">
+                <div class="col-md-6">
+                    <h6 class="text-uppercase text-muted mb-2">Datos principales</h6>
+                    <dl class="row mb-0">
+                        <dt class="col-5">Tipo</dt>
+                        <dd class="col-7"><?= e($servicio['type']) ?></dd>
+                        <dt class="col-5">Técnico</dt>
+                        <dd class="col-7"><?= e($servicio['tecnico_name'] ?? 'Sin asignar') ?></dd>
+                        <dt class="col-5">Programado</dt>
+                        <dd class="col-7"><?= e($servicio['scheduled_at'] ?? '-') ?></dd>
+                    </dl>
+                </div>
+                <div class="col-md-6">
+                    <h6 class="text-uppercase text-muted mb-2">Montos</h6>
+                    <dl class="row mb-0">
+                        <dt class="col-6">Monto estimado</dt>
+                        <dd class="col-6">$<?= e(number_format((float) $servicio['estimated_amount'], 2)) ?></dd>
+                        <dt class="col-6">Monto pagado</dt>
+                        <dd class="col-6">$<?= e(number_format((float) $servicio['amount'], 2)) ?></dd>
+                    </dl>
+                </div>
+            </div>
             <?php if ($equipmentMaterials): ?>
                 <div class="mt-3">
                     <strong>Equipos y material a utilizar</strong>
