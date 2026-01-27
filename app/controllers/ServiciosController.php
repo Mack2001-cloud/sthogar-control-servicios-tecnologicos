@@ -26,6 +26,7 @@ class ServiciosController
             'status' => $_GET['status'] ?? '',
             'cliente_id' => $_GET['cliente_id'] ?? '',
             'service_type' => $_GET['service_type'] ?? '',
+            'exclude_service_type' => 'instalacion',
         ];
 
         $servicios = Servicio::all($filters);
