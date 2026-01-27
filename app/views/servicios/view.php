@@ -12,11 +12,11 @@ $documentacionItems = array_pad($documentacionItems, 8, [
     'amount' => '',
 ]);
 $documentacionFecha = $documentacion['fecha'] ?? ($servicio['scheduled_at'] ?? '');
-$documentacionResponsable = $documentacion['responsable_venta'] ?? ($servicio['tecnico_name'] ?? '');
 $documentacionTotal = $documentacion['total'] ?? '';
+$documentacionTotalAmount = (float) $documentacionTotal;
 ?>
 <div class="row g-4">
-    <div class="col-lg-8">
+    <div class="col-12">
         <div class="card p-4 mb-4">
             <div class="d-flex flex-wrap justify-content-between align-items-start gap-2">
                 <div>
@@ -45,8 +45,8 @@ $documentacionTotal = $documentacion['total'] ?? '';
                 <div class="col-md-6">
                     <h6 class="text-uppercase text-muted mb-2">Montos</h6>
                     <dl class="row mb-0">
-                        <dt class="col-6">Monto estimado</dt>
-                        <dd class="col-6">$<?= e(number_format((float) $servicio['estimated_amount'], 2)) ?></dd>
+                        <dt class="col-6">Total</dt>
+                        <dd class="col-6">$<?= e(number_format($documentacionTotalAmount, 2)) ?></dd>
                         <dt class="col-6">Monto pagado</dt>
                         <dd class="col-6">$<?= e(number_format((float) $servicio['amount'], 2)) ?></dd>
                     </dl>
@@ -119,17 +119,6 @@ $documentacionTotal = $documentacion['total'] ?? '';
                         <label class="form-label">Total</label>
                         <input type="number" step="0.01" name="document_total" class="form-control" value="<?= e((string) $documentacionTotal) ?>" data-doc-total>
                     </div>
-                </div>
-
-                <div class="row g-3 mt-3">
-                    <div class="col-md-6">
-                        <label class="form-label">Responsable venta</label>
-                        <input type="text" name="document_responsable" class="form-control" value="<?= e($documentacionResponsable) ?>">
-                    </div>
-                </div>
-
-                <div class="d-flex justify-content-end mt-3">
-                    <button class="btn btn-primary" type="submit">Guardar hoja general</button>
                 </div>
             </form>
         </div>
@@ -241,33 +230,6 @@ $documentacionTotal = $documentacion['total'] ?? '';
         </div>
     </div>
 
-    <div class="col-lg-4">
-        <div class="card p-4">
-            <h6>Equipos instalados</h6>
-            <ul class="list-group list-group-flush">
-                <?php foreach ($equipos as $equipo): ?>
-                    <li class="list-group-item bg-transparent text-light">
-                        <strong><?= e($equipo['name']) ?></strong><br>
-                        <?php if (!empty($equipo['serial_number'])): ?>
-                            <small class="text-muted">Serial: <?= e($equipo['serial_number']) ?></small>
-                        <?php endif; ?>
-                    </li>
-                <?php endforeach; ?>
-                <?php if (!$equipos): ?>
-                    <li class="list-group-item bg-transparent text-muted">Sin equipos registrados para el cliente.</li>
-                <?php endif; ?>
-            </ul>
-            <form method="POST" action="/servicios/equipos/create" class="mt-3">
-                <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
-                <input type="hidden" name="servicio_id" value="<?= e((string) $servicio['id']) ?>">
-                <label class="form-label">Agregar equipo o producto</label>
-                <div class="input-group">
-                    <input type="text" name="equipment_name" class="form-control" placeholder="Nombre del equipo o producto" required>
-                    <button class="btn btn-outline-light" type="submit">Agregar</button>
-                </div>
-            </form>
-        </div>
-    </div>
 </div>
 <script>
     (() => {
