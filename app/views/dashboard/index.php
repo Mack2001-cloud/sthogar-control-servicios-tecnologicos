@@ -1,6 +1,7 @@
 <?php
 ob_start();
 $incomeByTechnician = $incomeByTechnician ?? [];
+$equipmentSales = $equipmentSales ?? [];
 $incomeLabels = array_map(
     static fn(array $row): string => (string) ($row['tecnico_name'] ?? ''),
     $incomeByTechnician
@@ -11,9 +12,19 @@ $incomeTotals = array_map(
 );
 $incomeLabelsJson = json_encode($incomeLabels, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
 $incomeTotalsJson = json_encode($incomeTotals, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
+$equipmentLabels = array_map(
+    static fn(array $row): string => (string) ($row['name'] ?? ''),
+    $equipmentSales
+);
+$equipmentTotals = array_map(
+    static fn(array $row): int => (int) ($row['total'] ?? 0),
+    $equipmentSales
+);
+$equipmentLabelsJson = json_encode($equipmentLabels, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
+$equipmentTotalsJson = json_encode($equipmentTotals, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
 ?>
 <div class="row g-4">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <div class="card stat-card">
             <div class="card-body">
                 <h5 class="card-title">Clientes</h5>
@@ -22,21 +33,12 @@ $incomeTotalsJson = json_encode($incomeTotals, JSON_HEX_TAG | JSON_HEX_APOS | JS
             </div>
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-6">
         <div class="card stat-card">
             <div class="card-body">
                 <h5 class="card-title">Servicios</h5>
                 <p class="display-6 mb-0"><?= e((string) $stats['servicios']) ?></p>
                 <span class="text-muted">Órdenes activas</span>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card stat-card">
-            <div class="card-body">
-                <h5 class="card-title">Equipos</h5>
-                <p class="display-6 mb-0"><?= e((string) $stats['equipos']) ?></p>
-                <span class="text-muted">Inventario instalado</span>
             </div>
         </div>
     </div>
@@ -65,6 +67,28 @@ $incomeTotalsJson = json_encode($incomeTotals, JSON_HEX_TAG | JSON_HEX_APOS | JS
 </div>
 
 <div class="row g-4 mt-1">
+    <div class="col-12">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+                    <div>
+                        <h6 class="text-uppercase text-muted mb-1">Ventas de equipos y productos</h6>
+                        <p class="mb-0 text-muted small">Agrupado por nombre del equipo registrado.</p>
+                    </div>
+                </div>
+                <?php if ($equipmentSales): ?>
+                    <div class="chart-container mt-3">
+                        <canvas id="equipmentSalesChart" height="120"></canvas>
+                    </div>
+                <?php else: ?>
+                    <p class="text-muted mt-3 mb-0">Aún no hay equipos registrados para ventas.</p>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mt-1">
     <div class="col-lg-6">
         <div class="card h-100">
             <div class="card-body">
@@ -72,7 +96,6 @@ $incomeTotalsJson = json_encode($incomeTotals, JSON_HEX_TAG | JSON_HEX_APOS | JS
                 <div class="d-flex gap-2 flex-wrap">
                     <a class="btn btn-outline-light" href="/clientes/create">Nuevo cliente</a>
                     <a class="btn btn-outline-light" href="/servicios/create">Nuevo servicio</a>
-                    <a class="btn btn-outline-light" href="/equipos/create">Registrar equipo</a>
                 </div>
             </div>
         </div>
@@ -90,72 +113,132 @@ $incomeTotalsJson = json_encode($incomeTotals, JSON_HEX_TAG | JSON_HEX_APOS | JS
         </div>
     </div>
 </div>
-<?php if ($incomeByTechnician): ?>
+<?php if ($incomeByTechnician || $equipmentSales): ?>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script>
         (() => {
-            const labels = <?= $incomeLabelsJson ?: '[]' ?>;
-            const values = <?= $incomeTotalsJson ?: '[]' ?>;
-            const canvas = document.getElementById('incomeByTechnicianChart');
+            const initIncomeChart = () => {
+                const labels = <?= $incomeLabelsJson ?: '[]' ?>;
+                const values = <?= $incomeTotalsJson ?: '[]' ?>;
+                const canvas = document.getElementById('incomeByTechnicianChart');
 
-            if (!canvas) {
-                return;
-            }
+                if (!canvas) {
+                    return;
+                }
 
-            const chartContext = canvas.getContext('2d');
-            const formatter = new Intl.NumberFormat('es-MX', {
-                style: 'currency',
-                currency: 'MXN',
-                maximumFractionDigits: 0,
-            });
+                const chartContext = canvas.getContext('2d');
+                const formatter = new Intl.NumberFormat('es-MX', {
+                    style: 'currency',
+                    currency: 'MXN',
+                    maximumFractionDigits: 0,
+                });
 
-            new Chart(chartContext, {
-                type: 'bar',
-                data: {
-                    labels,
-                    datasets: [{
-                        label: 'Ingresos',
-                        data: values,
-                        backgroundColor: '#3a86ff',
-                        borderRadius: 8,
-                        borderSkipped: false,
-                    }],
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false,
+                new Chart(chartContext, {
+                    type: 'bar',
+                    data: {
+                        labels,
+                        datasets: [{
+                            label: 'Ingresos',
+                            data: values,
+                            backgroundColor: '#3a86ff',
+                            borderRadius: 8,
+                            borderSkipped: false,
+                        }],
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false,
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: (context) => formatter.format(context.parsed.y || 0),
+                                },
+                            },
                         },
-                        tooltip: {
-                            callbacks: {
-                                label: (context) => formatter.format(context.parsed.y || 0),
+                        scales: {
+                            x: {
+                                ticks: {
+                                    color: getComputedStyle(document.documentElement).getPropertyValue('--text-muted'),
+                                },
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.06)',
+                                },
+                            },
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    color: getComputedStyle(document.documentElement).getPropertyValue('--text-muted'),
+                                    callback: (value) => formatter.format(value || 0),
+                                },
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.06)',
+                                },
                             },
                         },
                     },
-                    scales: {
-                        x: {
-                            ticks: {
-                                color: getComputedStyle(document.documentElement).getPropertyValue('--text-muted'),
-                            },
-                            grid: {
-                                color: 'rgba(255, 255, 255, 0.06)',
+                });
+            };
+
+            const initEquipmentChart = () => {
+                const labels = <?= $equipmentLabelsJson ?: '[]' ?>;
+                const values = <?= $equipmentTotalsJson ?: '[]' ?>;
+                const canvas = document.getElementById('equipmentSalesChart');
+
+                if (!canvas) {
+                    return;
+                }
+
+                const chartContext = canvas.getContext('2d');
+
+                new Chart(chartContext, {
+                    type: 'bar',
+                    data: {
+                        labels,
+                        datasets: [{
+                            label: 'Ventas',
+                            data: values,
+                            backgroundColor: '#ffbe0b',
+                            borderRadius: 8,
+                            borderSkipped: false,
+                        }],
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false,
                             },
                         },
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                color: getComputedStyle(document.documentElement).getPropertyValue('--text-muted'),
-                                callback: (value) => formatter.format(value || 0),
+                        scales: {
+                            x: {
+                                ticks: {
+                                    color: getComputedStyle(document.documentElement).getPropertyValue('--text-muted'),
+                                },
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.06)',
+                                },
                             },
-                            grid: {
-                                color: 'rgba(255, 255, 255, 0.06)',
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    precision: 0,
+                                    color: getComputedStyle(document.documentElement).getPropertyValue('--text-muted'),
+                                },
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.06)',
+                                },
                             },
                         },
                     },
-                },
-            });
+                });
+            };
+
+            initIncomeChart();
+            initEquipmentChart();
         })();
     </script>
 <?php endif; ?>

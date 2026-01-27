@@ -81,6 +81,19 @@ class Equipo
         return (int) $pdo->query('SELECT COUNT(*) FROM equipos')->fetchColumn();
     }
 
+    public static function salesSummary(int $limit = 8): array
+    {
+        $pdo = Database::connection();
+        $stmt = $pdo->prepare('SELECT categoria_equipo AS name, COUNT(*) AS total
+            FROM equipos
+            GROUP BY categoria_equipo
+            ORDER BY total DESC, categoria_equipo ASC
+            LIMIT :limit');
+        $stmt->bindValue('limit', $limit, \PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
     public static function byCliente(int $clienteId): array
     {
         $pdo = Database::connection();
