@@ -111,6 +111,11 @@ class Servicio
             $params['cliente_id'] = $filters['cliente_id'];
         }
 
+        if (!empty($filters['cliente_search'])) {
+            $sql .= ' AND clientes.nombre LIKE :cliente_search';
+            $params['cliente_search'] = '%' . $filters['cliente_search'] . '%';
+        }
+
         if (!empty($filters['service_type'])) {
             $sql .= ' AND servicios.tipo = :service_type';
             $params['service_type'] = $filters['service_type'];
