@@ -342,6 +342,24 @@ class Servicio
         return (int) $pdo->query('SELECT COUNT(*) FROM servicios')->fetchColumn();
     }
 
+    public static function countByType(string $type): int
+    {
+        $pdo = Database::connection();
+        $normalizedType = self::normalizeTipo($type);
+        $stmt = $pdo->prepare('SELECT COUNT(*) FROM servicios WHERE tipo = :type');
+        $stmt->execute(['type' => $normalizedType]);
+        return (int) $stmt->fetchColumn();
+    }
+
+    public static function countExcludingType(string $type): int
+    {
+        $pdo = Database::connection();
+        $normalizedType = self::normalizeTipo($type);
+        $stmt = $pdo->prepare('SELECT COUNT(*) FROM servicios WHERE tipo IS NULL OR tipo != :type');
+        $stmt->execute(['type' => $normalizedType]);
+        return (int) $stmt->fetchColumn();
+    }
+
     private static function columnPlaceholder(string $column): string
     {
         return match ($column) {

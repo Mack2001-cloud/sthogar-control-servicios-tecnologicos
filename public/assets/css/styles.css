@@ -132,6 +132,18 @@ body {
   border-left: 4px solid #3a86ff;
 }
 
+.card.stat-card.stat-card--clientes {
+  border-left-color: #3a86ff;
+}
+
+.card.stat-card.stat-card--servicios {
+  border-left-color: #ffbe0b;
+}
+
+.card.stat-card.stat-card--instalaciones {
+  border-left-color: #1bbf83;
+}
+
 .chart-container {
   position: relative;
   min-height: 240px;
