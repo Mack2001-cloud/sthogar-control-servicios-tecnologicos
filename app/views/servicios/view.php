@@ -46,7 +46,7 @@ $documentacionTotalAmount = (float) $documentacionTotal;
                     <h6 class="text-uppercase text-muted mb-2">Montos</h6>
                     <dl class="row mb-0">
                         <dt class="col-6">Total</dt>
-                        <dd class="col-6">$<?= e(number_format($documentacionTotalAmount, 2)) ?></dd>
+                        <dd class="col-6" data-doc-total-display>$<?= e(number_format($documentacionTotalAmount, 2)) ?></dd>
                         <dt class="col-6">Monto pagado</dt>
                         <dd class="col-6">$<?= e(number_format((float) $servicio['amount'], 2)) ?></dd>
                     </dl>
@@ -240,6 +240,7 @@ $documentacionTotalAmount = (float) $documentacionTotal;
 
         const rows = Array.from(form.querySelectorAll('[data-doc-row]'));
         const totalInput = form.querySelector('[data-doc-total]');
+        const totalDisplay = document.querySelector('[data-doc-total-display]');
 
         const parseValue = (value) => {
             if (typeof value !== 'string') {
@@ -252,6 +253,13 @@ $documentacionTotalAmount = (float) $documentacionTotal;
 
         const formatValue = (value) => (Number.isFinite(value) ? value.toFixed(2) : '');
 
+        const updateTotalDisplay = (total) => {
+            if (!totalDisplay) {
+                return;
+            }
+            totalDisplay.textContent = `$${formatValue(total)}`;
+        };
+
         const updateTotal = () => {
             if (!totalInput) {
                 return;
@@ -261,6 +269,7 @@ $documentacionTotalAmount = (float) $documentacionTotal;
                 return sum + parseValue(amountInput?.value ?? '');
             }, 0);
             totalInput.value = total ? formatValue(total) : '';
+            updateTotalDisplay(total);
         };
 
         rows.forEach((row) => {
