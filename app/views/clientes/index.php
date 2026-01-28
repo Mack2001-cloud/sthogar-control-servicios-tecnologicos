@@ -3,7 +3,7 @@ ob_start();
 ?>
 <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
     <form class="d-flex gap-2" method="GET" action="/clientes">
-        <input type="text" name="q" class="form-control" placeholder="Buscar cliente" value="<?= e($search) ?>">
+        <input type="text" name="q" class="form-control" placeholder="Buscar cliente" value="<?= e($search) ?>" list="clientes-sugeridos">
         <button class="btn btn-primary" type="submit">Buscar</button>
     </form>
     <div class="d-flex gap-2">
@@ -13,6 +13,15 @@ ob_start();
         <a class="btn btn-success" href="/clientes/create">Nuevo cliente</a>
     </div>
 </div>
+
+<datalist id="clientes-sugeridos">
+    <?php foreach ($clientes as $cliente): ?>
+        <?php $referencia = trim((string) ($cliente['notes'] ?? '')); ?>
+        <option value="<?= e($cliente['name']) ?>" label="<?= e($referencia ? 'Referencia: ' . $referencia : 'Sin referencia') ?>">
+            <?= e($referencia ? 'Referencia: ' . $referencia : 'Sin referencia') ?>
+        </option>
+    <?php endforeach; ?>
+</datalist>
 
 <div class="card mt-4">
     <div class="table-responsive">
