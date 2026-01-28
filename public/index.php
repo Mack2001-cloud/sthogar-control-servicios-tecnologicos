@@ -84,6 +84,7 @@ $router->add('GET', '/instalaciones', [$serviciosController, 'instalaciones'], $
 $router->add('GET', '/servicios/create', [$serviciosController, 'createForm'], $generalMiddleware);
 $router->add('POST', '/servicios/create', [$serviciosController, 'create'], $generalMiddleware);
 $router->add('GET', '/servicios/view', [$serviciosController, 'view'], $generalMiddleware);
+$router->add('GET', '/servicios/documentacion/view', [$serviciosController, 'documentationView'], $generalMiddleware);
 $router->add('GET', '/servicios/edit', [$serviciosController, 'editForm'], $generalMiddleware);
 $router->add('POST', '/servicios/edit', [$serviciosController, 'update'], $generalMiddleware);
 $router->add('POST', '/servicios/status', [$serviciosController, 'updateStatus'], $generalMiddleware);
