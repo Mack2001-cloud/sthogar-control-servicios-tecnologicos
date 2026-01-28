@@ -50,7 +50,7 @@ $documentacionTotalAmount = (float) $documentacionTotal;
                     <h6 class="text-uppercase text-muted mb-2">Montos</h6>
                     <dl class="row mb-0">
                         <dt class="col-6">Total</dt>
-                        <dd class="col-6">$<?= e(number_format($documentacionTotalAmount, 2)) ?></dd>
+                        <dd class="col-6" data-doc-total-display>$<?= e(number_format($documentacionTotalAmount, 2)) ?></dd>
                         <dt class="col-6">Monto pagado</dt>
                         <dd class="col-6">$<?= e(number_format((float) $servicio['amount'], 2)) ?></dd>
                         <dt class="col-6">Presupuesto</dt>
@@ -111,7 +111,7 @@ $documentacionTotalAmount = (float) $documentacionTotal;
 
         <div class="card p-4 mb-4">
             <h6>Hoja de instalación</h6>
-            <form method="POST" action="/servicios/documentacion" class="mt-3" data-documentation-form>
+            <form method="POST" action="/servicios/documentacion" class="mt-3" data-documentation-form data-extras-amount="<?= e(number_format($extrasAmount, 2, '.', '')) ?>" data-extras-description="<?= e($extrasDescription) ?>">
                 <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
                 <input type="hidden" name="servicio_id" value="<?= e((string) $servicio['id']) ?>">
                 <div class="row g-3">
@@ -160,9 +160,12 @@ $documentacionTotalAmount = (float) $documentacionTotal;
                 <p class="text-muted small mb-2">Precios sujetos a cambio sin previo aviso.</p>
 
                 <div class="row g-3 align-items-end">
-                    <div class="col-md-4">
+                    <div class="col-md-5">
                         <label class="form-label">Total</label>
-                        <input type="number" step="0.01" name="document_total" class="form-control" value="<?= e((string) $documentacionTotal) ?>" data-doc-total>
+                        <div class="input-group">
+                            <button class="btn btn-outline-light" type="button" data-doc-apply-extras>Reflejar extras</button>
+                            <input type="number" step="0.01" name="document_total" class="form-control" value="<?= e((string) $documentacionTotal) ?>" data-doc-total>
+                        </div>
                     </div>
                 </div>
             </form>
@@ -285,6 +288,10 @@ $documentacionTotalAmount = (float) $documentacionTotal;
 
         const rows = Array.from(form.querySelectorAll('[data-doc-row]'));
         const totalInput = form.querySelector('[data-doc-total]');
+        const totalDisplay = document.querySelector('[data-doc-total-display]');
+        const applyExtrasButton = form.querySelector('[data-doc-apply-extras]');
+        const extrasAmount = parseFloat(form.dataset.extrasAmount ?? '0');
+        const extrasDescription = form.dataset.extrasDescription ?? '';
 
         const parseValue = (value) => {
             if (typeof value !== 'string') {
@@ -297,6 +304,13 @@ $documentacionTotalAmount = (float) $documentacionTotal;
 
         const formatValue = (value) => (Number.isFinite(value) ? value.toFixed(2) : '');
 
+        const updateTotalDisplay = (total) => {
+            if (!totalDisplay) {
+                return;
+            }
+            totalDisplay.textContent = `$${formatValue(total)}`;
+        };
+
         const updateTotal = () => {
             if (!totalInput) {
                 return;
@@ -306,6 +320,55 @@ $documentacionTotalAmount = (float) $documentacionTotal;
                 return sum + parseValue(amountInput?.value ?? '');
             }, 0);
             totalInput.value = total ? formatValue(total) : '';
+            updateTotalDisplay(total);
+        };
+
+        const applyExtras = () => {
+            if (!Number.isFinite(extrasAmount) || extrasAmount <= 0) {
+                return;
+            }
+            const targetRow = rows.find((row) => {
+                const conceptInput = row.querySelector('input[name="concept[]"]');
+                const unitInput = row.querySelector('input[name="unit[]"]');
+                const quantityInput = row.querySelector('input[name="quantity[]"]');
+                const unitPriceInput = row.querySelector('input[name="unit_price[]"]');
+                const amountInput = row.querySelector('input[name="amount[]"]');
+                return (
+                    (conceptInput?.value ?? '') === '' &&
+                    (unitInput?.value ?? '') === '' &&
+                    (quantityInput?.value ?? '') === '' &&
+                    (unitPriceInput?.value ?? '') === '' &&
+                    (amountInput?.value ?? '') === ''
+                );
+            }) ?? rows[0];
+
+            if (!targetRow) {
+                return;
+            }
+
+            const conceptInput = targetRow.querySelector('input[name="concept[]"]');
+            const unitInput = targetRow.querySelector('input[name="unit[]"]');
+            const quantityInput = targetRow.querySelector('input[name="quantity[]"]');
+            const unitPriceInput = targetRow.querySelector('input[name="unit_price[]"]');
+            const amountInput = targetRow.querySelector('input[name="amount[]"]');
+
+            if (conceptInput) {
+                conceptInput.value = extrasDescription || 'Extras';
+            }
+            if (unitInput) {
+                unitInput.value = 'Servicio';
+            }
+            if (quantityInput) {
+                quantityInput.value = '1';
+            }
+            if (unitPriceInput) {
+                unitPriceInput.value = formatValue(extrasAmount);
+            }
+            if (amountInput) {
+                amountInput.value = formatValue(extrasAmount);
+            }
+
+            updateTotal();
         };
 
         rows.forEach((row) => {
@@ -330,6 +393,7 @@ $documentacionTotalAmount = (float) $documentacionTotal;
             amountInput?.addEventListener('input', updateTotal);
         });
 
+        applyExtrasButton?.addEventListener('click', applyExtras);
         updateTotal();
     })();
 </script>
