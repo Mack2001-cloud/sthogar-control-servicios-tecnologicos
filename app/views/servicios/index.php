@@ -23,7 +23,18 @@ $createLink = $createLink ?? '/servicios/create';
 </div>
 <div class="card p-3">
     <form class="row g-3" method="GET" action="<?= e($filterAction) ?>">
-        <div class="col-md-4">
+        <div class="col-md-3">
+            <label class="form-label">Buscar cliente</label>
+            <input
+                type="text"
+                name="cliente_search"
+                class="form-control"
+                placeholder="Escribe el nombre"
+                list="clientes-sugeridos"
+                value="<?= e($filters['cliente_search'] ?? '') ?>"
+            >
+        </div>
+        <div class="col-md-3">
             <label class="form-label">Cliente</label>
             <select name="cliente_id" class="form-select">
                 <option value="">Todos</option>
@@ -34,7 +45,7 @@ $createLink = $createLink ?? '/servicios/create';
                 <?php endforeach; ?>
             </select>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <label class="form-label">Estado</label>
             <select name="status" class="form-select">
                 <option value="">Todos</option>
@@ -48,11 +59,16 @@ $createLink = $createLink ?? '/servicios/create';
         <?php if (!empty($filters['service_type'])): ?>
             <input type="hidden" name="service_type" value="<?= e((string) $filters['service_type']) ?>">
         <?php endif; ?>
-        <div class="col-md-4 d-flex align-items-end gap-2">
+        <div class="col-md-3 d-flex align-items-end gap-2">
             <button class="btn btn-primary" type="submit">Filtrar</button>
             <a class="btn btn-outline-light" href="<?= e($filterAction) ?>">Limpiar</a>
         </div>
     </form>
+    <datalist id="clientes-sugeridos">
+        <?php foreach ($clientes as $cliente): ?>
+            <option value="<?= e($cliente['name']) ?>"></option>
+        <?php endforeach; ?>
+    </datalist>
 </div>
 
 <div class="d-flex justify-content-between align-items-center mt-4">

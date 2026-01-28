@@ -25,6 +25,7 @@ class ServiciosController
         $filters = [
             'status' => $_GET['status'] ?? '',
             'cliente_id' => $_GET['cliente_id'] ?? '',
+            'cliente_search' => trim($_GET['cliente_search'] ?? ''),
             'service_type' => $_GET['service_type'] ?? '',
             'exclude_service_type' => 'instalacion',
         ];
@@ -46,6 +47,7 @@ class ServiciosController
         $filters = [
             'status' => $_GET['status'] ?? '',
             'cliente_id' => $_GET['cliente_id'] ?? '',
+            'cliente_search' => trim($_GET['cliente_search'] ?? ''),
             'service_type' => 'instalacion',
         ];
 
