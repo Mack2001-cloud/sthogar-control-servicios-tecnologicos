@@ -171,6 +171,28 @@ class ServiciosController
         ]);
     }
 
+    public function documentationView(): void
+    {
+        $id = (int) ($_GET['id'] ?? 0);
+        $servicio = Servicio::find($id);
+        if (!$servicio) {
+            http_response_code(404);
+            echo view('partials/404');
+            return;
+        }
+
+        $documentacion = ServicioDocumentacion::findByServicio($id);
+        $isInstalacion = ($servicio['service_type'] ?? '') === 'instalacion';
+        $view = $isInstalacion ? 'servicios/instalacion_documentacion' : 'servicios/documentacion';
+        $title = $isInstalacion ? 'Hoja de instalación' : 'Hoja de servicio';
+
+        echo view($view, [
+            'title' => $title,
+            'servicio' => $servicio,
+            'documentacion' => $documentacion,
+        ]);
+    }
+
     public function editForm(): void
     {
         $id = (int) ($_GET['id'] ?? 0);
