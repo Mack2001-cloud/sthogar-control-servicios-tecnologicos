@@ -2,6 +2,9 @@
 
 Aplicación interna en PHP 8 + MariaDB para controlar clientes, servicios tecnológicos, equipos instalados, bitácoras, pagos y evidencias.
 
+## Funcionalidades
+- Búsqueda de clientes con sugerencias que incluyen la referencia del cliente.
+
 ## Estructura
 ```
 /app
