@@ -13,7 +13,8 @@ class DashboardController
     {
         $stats = [
             'clientes' => Cliente::countAll(),
-            'servicios' => Servicio::countAll(),
+            'servicios' => Servicio::countExcludingType('instalacion'),
+            'instalaciones' => Servicio::countByType('instalacion'),
         ];
 
         echo view('dashboard/index', [
