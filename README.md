@@ -19,6 +19,7 @@ Aplicación interna en PHP 8 + MariaDB para controlar clientes, servicios tecnol
   sthogar.sql
 /docs
   DELIVERABLES.md
+  PROJECT_REPORT.md
 /public
   index.php
   .htaccess
@@ -42,3 +43,6 @@ README.md
 - Admin: `admin@sthogar.test` / `Admin123*`
 - Ventas: `ventas@sthogar.test` / `Ventas123*`
 - Técnico: `tecnico@sthogar.test` / `Tecnico123*`
+
+## Documentación
+- Reporte de proyecto: `docs/PROJECT_REPORT.md`.
