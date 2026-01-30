@@ -176,6 +176,9 @@ CREATE TABLE bitacora_servicio (
 CREATE TABLE adjuntos (
   id INT AUTO_INCREMENT PRIMARY KEY,
   servicio_id INT NOT NULL,
+  numero_evidencia INT NOT NULL,
+  ventana VARCHAR(120) NOT NULL,
+  descripcion TEXT NOT NULL,
   nombre_original VARCHAR(255) NOT NULL,
   nombre_guardado VARCHAR(255) NOT NULL,
   ruta VARCHAR(255) NOT NULL,
@@ -232,7 +235,7 @@ INSERT INTO bitacora_servicio (servicio_id, usuario_id, comentario, estatus_nuev
   (5, 2, 'Instalacion finalizada y pruebas completas.', 'finalizado'),
   (6, 1, 'Servicio cancelado por cliente.', 'cancelado');
 
-INSERT INTO adjuntos (servicio_id, nombre_original, nombre_guardado, ruta, tipo_mime, tamano) VALUES
-  (1, 'evidencia_inicio.jpg', 'srv1_inicio_20240612.jpg', 'uploads/servicios/1/', 'image/jpeg', 245812),
-  (1, 'planos.pdf', 'srv1_planos_20240612.pdf', 'uploads/servicios/1/', 'application/pdf', 480120),
-  (3, 'diagnostico.txt', 'srv3_diagnostico_20240615.txt', 'uploads/servicios/3/', 'text/plain', 1820);
+INSERT INTO adjuntos (servicio_id, numero_evidencia, ventana, descripcion, nombre_original, nombre_guardado, ruta, tipo_mime, tamano) VALUES
+  (1, 1, 'Detalle de servicio', 'Captura del estado inicial del servicio.', 'evidencia_inicio.jpg', 'srv1_inicio_20240612.jpg', 'uploads/servicios/1/', 'image/jpeg', 245812),
+  (1, 2, 'Detalle de servicio', 'Planos entregados por el cliente.', 'planos.pdf', 'srv1_planos_20240612.pdf', 'uploads/servicios/1/', 'application/pdf', 480120),
+  (3, 1, 'Detalle de servicio', 'Diagnóstico documentado por el técnico.', 'diagnostico.txt', 'srv3_diagnostico_20240615.txt', 'uploads/servicios/3/', 'text/plain', 1820);

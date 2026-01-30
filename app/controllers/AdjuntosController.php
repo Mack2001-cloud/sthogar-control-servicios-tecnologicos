@@ -11,6 +11,15 @@ class AdjuntosController
         verify_csrf();
         $config = require __DIR__ . '/../config/config.php';
         $servicioId = (int) ($_POST['servicio_id'] ?? 0);
+        $evidenceNumber = (int) ($_POST['evidence_number'] ?? 0);
+        $windowName = trim((string) ($_POST['window_name'] ?? ''));
+        $description = trim((string) ($_POST['description'] ?? ''));
+
+        if ($evidenceNumber <= 0 || $windowName === '' || $description === '') {
+            set_flash('danger', 'Completa el número de evidencia, la ventana y la descripción.');
+            header('Location: /servicios/view?id=' . $servicioId);
+            exit;
+        }
 
         if (!isset($_FILES['adjunto']) || $_FILES['adjunto']['error'] !== UPLOAD_ERR_OK) {
             set_flash('danger', 'Error al subir el archivo.');
@@ -45,6 +54,9 @@ class AdjuntosController
 
         Adjunto::create([
             'servicio_id' => $servicioId,
+            'evidence_number' => $evidenceNumber,
+            'window_name' => $windowName,
+            'description' => $description,
             'filename' => $filename,
             'original_name' => $file['name'],
             'mime_type' => $mimeType,
