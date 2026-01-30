@@ -146,8 +146,14 @@ $documentacionTotalAmount = (float) $documentacionTotal;
             <ul class="list-group list-group-flush mb-3">
                 <?php foreach ($adjuntos as $adjunto): ?>
                     <li class="list-group-item bg-transparent text-light">
-                        <?= e($adjunto['original_name']) ?>
-                        <small class="text-muted">(<?= e($adjunto['mime_type']) ?>, <?= e((string) $adjunto['size']) ?> bytes)</small>
+                        <div class="fw-semibold">
+                            Evidencia #<?= e((string) $adjunto['evidence_number']) ?> · <?= e($adjunto['window_name']) ?>
+                        </div>
+                        <div class="small text-muted mb-1"><?= e($adjunto['description']) ?></div>
+                        <div>
+                            <?= e($adjunto['original_name']) ?>
+                            <small class="text-muted">(<?= e($adjunto['mime_type']) ?>, <?= e((string) $adjunto['size']) ?> bytes)</small>
+                        </div>
                     </li>
                 <?php endforeach; ?>
                 <?php if (!$adjuntos): ?>
@@ -157,6 +163,15 @@ $documentacionTotalAmount = (float) $documentacionTotal;
             <form method="POST" action="/adjuntos/upload" enctype="multipart/form-data" class="row g-2">
                 <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
                 <input type="hidden" name="servicio_id" value="<?= e((string) $servicio['id']) ?>">
+                <div class="col-md-3">
+                    <input type="number" name="evidence_number" class="form-control" min="1" placeholder="Número" required>
+                </div>
+                <div class="col-md-5">
+                    <input type="text" name="window_name" class="form-control" placeholder="Ventana" required>
+                </div>
+                <div class="col-12">
+                    <textarea name="description" class="form-control" rows="2" placeholder="Descripción de la evidencia" required></textarea>
+                </div>
                 <div class="col-md-8">
                     <input type="file" name="adjunto" class="form-control" required>
                 </div>
