@@ -5,14 +5,16 @@
 .
 ├── app
 │   ├── config
+│   │   ├── auth.php
 │   │   ├── config.php
 │   │   └── database.php
 │   ├── controllers
 │   │   ├── AdjuntosController.php
+│   │   ├── AdminAgentesVentasController.php
+│   │   ├── AdminTecnicosController.php
 │   │   ├── AuthController.php
 │   │   ├── ClientesController.php
 │   │   ├── DashboardController.php
-│   │   ├── EquiposController.php
 │   │   ├── ExportController.php
 │   │   ├── PagosController.php
 │   │   └── ServiciosController.php
@@ -23,28 +25,40 @@
 │   │   ├── auth.php
 │   │   ├── csrf.php
 │   │   ├── flash.php
+│   │   ├── session.php
 │   │   ├── validators.php
 │   │   └── view.php
 │   ├── middlewares
-│   │   └── auth.php
+│   │   ├── AuthMiddleware.php
+│   │   └── RoleMiddleware.php
 │   ├── models
 │   │   ├── Adjunto.php
+│   │   ├── AgenteVenta.php
 │   │   ├── Cliente.php
 │   │   ├── Equipo.php
 │   │   ├── Pago.php
 │   │   ├── Servicio.php
+│   │   ├── ServicioDocumentacion.php
 │   │   ├── ServicioLog.php
+│   │   ├── Tecnico.php
 │   │   └── User.php
 │   └── views
+│       ├── admin
+│       │   ├── agentes_ventas
+│       │   │   ├── create.php
+│       │   │   ├── edit.php
+│       │   │   └── index.php
+│       │   └── tecnicos
+│       │       ├── create.php
+│       │       ├── edit.php
+│       │       └── index.php
 │       ├── auth
 │       │   └── login.php
 │       ├── clientes
 │       │   ├── form.php
-│       │   └── index.php
+│       │   ├── index.php
+│       │   └── view.php
 │       ├── dashboard
-│       │   └── index.php
-│       ├── equipos
-│       │   ├── form.php
 │       │   └── index.php
 │       ├── layouts
 │       │   └── main.php
@@ -53,13 +67,18 @@
 │       │   ├── 404.php
 │       │   └── 419.php
 │       └── servicios
+│           ├── documentacion.php
 │           ├── form.php
 │           ├── index.php
+│           ├── instalacion_documentacion.php
+│           ├── instalacion_form.php
+│           ├── instalacion_view.php
 │           └── view.php
 ├── database
 │   └── sthogar.sql
 ├── docs
-│   └── DELIVERABLES.md
+│   ├── DELIVERABLES.md
+│   └── PROJECT_REPORT.md
 ├── public
 │   ├── .htaccess
 │   ├── index.php
