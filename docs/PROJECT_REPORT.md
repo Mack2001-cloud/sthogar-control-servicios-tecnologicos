@@ -71,6 +71,57 @@ Durante el desarrollo del proyecto se llevaron a cabo las siguientes actividades
    Posteriormente, se realizó la selección de las tecnologías y herramientas de desarrollo más adecuadas para la creación del sistema digital. Se definió el uso de PHP como lenguaje de programación, MariaDB como gestor de base de datos y un servidor web Apache. Esta selección permitió asegurar que el sistema contara con una estructura tecnológica compatible con la infraestructura disponible en ST-Hogar y con posibilidades de crecimiento futuro.
 4. **Análisis de los procesos de servicio técnico.**
    En esta etapa se realizó un análisis detallado de los procesos técnicos y administrativos relacionados con la gestión de servicios tecnológicos. Se documentaron los procedimientos de atención, asignación de técnicos, instalación de equipos y cierre de servicios, lo cual permitió modelar de manera clara las operaciones del sistema y sentar las bases para el diseño de la base de datos y los módulos funcionales.
+
+   **Diagramas de flujo de procesos clave**
+
+   **Flujo de atención de solicitudes**
+   ```mermaid
+   flowchart TD
+       A[Cliente solicita servicio] --> B[Recepción y registro de solicitud]
+       B --> C{¿Información completa?}
+       C -- No --> D[Solicitar información faltante]
+       D --> B
+       C -- Sí --> E[Clasificar tipo de servicio]
+       E --> F[Priorizar solicitud]
+       F --> G[Enviar a coordinación técnica]
+   ```
+
+   **Flujo de asignación de técnicos**
+   ```mermaid
+   flowchart TD
+       A[Solicitud priorizada] --> B[Validar disponibilidad de técnicos]
+       B --> C{¿Técnico disponible?}
+       C -- No --> D[Programar fecha tentativa]
+       D --> E[Notificar al cliente]
+       C -- Sí --> F[Asignar técnico]
+       F --> G[Confirmar datos del servicio]
+       G --> H[Generar orden de servicio]
+   ```
+
+   **Flujo de instalación o intervención técnica**
+   ```mermaid
+   flowchart TD
+       A[Orden de servicio] --> B[Técnico se traslada]
+       B --> C[Diagnóstico en sitio]
+       C --> D{¿Se requiere instalación?}
+       D -- Sí --> E[Instalar equipo]
+       D -- No --> F[Realizar mantenimiento/reparación]
+       E --> G[Registrar evidencias]
+       F --> G
+       G --> H[Actualizar bitácora]
+   ```
+
+   **Flujo de cierre de servicio**
+   ```mermaid
+   flowchart TD
+       A[Trabajo finalizado] --> B[Validar funcionamiento]
+       B --> C{¿Cliente conforme?}
+       C -- No --> D[Registrar ajustes pendientes]
+       D --> E[Reprogramar visita]
+       C -- Sí --> F[Generar reporte final]
+       F --> G[Registrar pago si aplica]
+       G --> H[Cerrar servicio]
+   ```
 5. **Diseño y creación de la base de datos.**
    Con la información obtenida, se diseñó y creó la base de datos del sistema. Se estructuraron tablas, relaciones y campos necesarios para almacenar la información de usuarios, clientes, servicios, equipos, pagos, adjuntos y bitácoras de servicio. Esta actividad fue fundamental para garantizar la integridad de los datos, evitar inconsistencias y facilitar la consulta y actualización de la información.
 6. **Validación técnica, revisión de riesgos y seguridad de la información.**
