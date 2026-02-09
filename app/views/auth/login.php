@@ -18,7 +18,7 @@ $flash = get_flash();
                 <div class="card-body p-4 p-md-5 auth-card">
                     <div class="text-center mb-4">
                         <span class="auth-badge">Acceso seguro</span>
-                        <h1 class="h3 mt-3 mb-2">ST-Hogar</h1>
+                        <h1 class="h3 mt-3 mb-2">Novedades Tlaxcala</h1>
                         <p class="text-muted mb-0">Bienvenido, inicia sesión para continuar</p>
                     </div>
 
