@@ -27,8 +27,9 @@ $user = auth_user();
 <div class="d-flex">
     <nav class="sidebar">
         <div class="sidebar-brand">
-            <span class="badge text-bg-primary">ST-Hogar</span>
+            <span class="badge sidebar-badge">ST-Hogar</span>
             <p class="small text-uppercase text-muted mb-0">Control de servicios</p>
+            <p class="small text-uppercase text-muted mb-0">Novedades Tlaxcala</p>
         </div>
         <ul class="nav flex-column">
             <?php if (is_admin()): ?>
